@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+:root {
+  --color-p1: #D9D9D9;
+  --color-p2: #D2CECE;
+  --color-p3: #EEEEEE;
+  --color-p4: #D2CECE;
+
+  --color-s1: #000000;
+  --color-s2: #FFFFFF;
+  --color-s4: #C8D6EC;
+  --color-s5: #F69797;
+  --color-s6: #9FE09F;
+
+  --color-p1-shadow: #D0CFCF;
+  --color-p2-shadow: #B7B7B7;
+  --color-p3-shadow: #E0E0E0;
+  --color-p4-shadow: #D2CECE;
+
+  --color-s1-shadow: #000000;
+  --color-s2-shadow: #FFFFFF;
+  --color-s4-shadow: #C8D6EC;
+  --color-s5-shadow: #F69797;
+  --color-s6-shadow: #92C992;
+
+  --title-size: 700;
+  --subtitle-size: 500;
+  --text-size: 400;
+
+  --title-h1: 24px;
+  --title-h2: 23px;
+  --title-h3: 22px;
+  --title-h4: 21px;
+  --title-h5: 20px;
+  --title-h6: 19px;
+  --title-h7: 18px;
+
+  --subtitle-h1: 20px;
+  --subtitle-h2: 19px;
+  --subtitle-h3: 18px;
+  --subtitle-h4: 17px;
+  --subtitle-h5: 16px;
+  --subtitle-h6: 15px;
+  --subtitle-h7: 14px;
+
+  --text-p1: 14px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+
+  font-size: var(--text-p1);
+  font-weight: var(--text-size);
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font-size: var(--text-p1) !important;
+  font-weight: var(--subtitle-size);
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid var(--color-p2);
+  padding: 2px 10px;
+}
+
+.h1 {
+  font-size: var(--title-h1);
+  font-weight: var(--title-size);
+}
+
+.h2 {
+  font-size: var(--title-h2);
+  font-weight: var(--title-size);
+}
+
+.h3 {
+  font-size: var(--title-h3);
+  font-weight: var(--title-size);
+}
+
+.h4 {
+  font-size: var(--title-h4);
+  font-weight: var(--title-size);
+}
+
+.h5 {
+  font-size: var(--title-h5);
+  font-weight: var(--title-size);
+}
+
+.h6 {
+  font-size: var(--title-h6);
+  font-weight: var(--title-size);
+}
+
+.h7 {
+  font-size: var(--title-h7);
+  font-weight: var(--title-size);
+}
+
+.sh1 {
+  font-size: var(--subtitle-h1);
+  font-weight: var(--subtitle-size);
+}
+
+.sh2 {
+  font-size: var(--subtitle-h2);
+  font-weight: var(--subtitle-size);
+}
+
+.sh3 {
+  font-size: var(--subtitle-h3);
+  font-weight: var(--subtitle-size);
+}
+
+.sh4 {
+  font-size: var(--subtitle-h4);
+  font-weight: var(--subtitle-size);
+}
+
+.sh5 {
+  font-size: var(--subtitle-h5);
+  font-weight: var(--subtitle-size);
+}
+
+.sh6 {
+  font-size: var(--subtitle-h6);
+  font-weight: var(--subtitle-size);
+}
+
+.sh7 {
+  font-size: var(--subtitle-h7);
+  font-weight: var(--subtitle-size);
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-grid {
+  display: grid;
+}

@@ -1,0 +1,114 @@
+.no-point {
+    align-items: center;
+    position: relative;
+    display: flex;
+    padding: 5px 20px;
+    width: 100%;
+}
+
+.comment {
+    font-size: large;
+    font-weight: bolder;
+}
+
+.grid-area {
+    height: 60px;
+    outline: 1px dashed gray;
+    display: inline-flex;
+}
+
+.edit {
+    position: absolute;
+    top: 2px;
+    right: 20px;
+    font-size: 10px;
+    cursor: pointer;
+    background: rgb(79, 90, 240);
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.edit:hover {
+    color: white;
+    background: rgb(72, 136, 233);
+}
+
+.delete {
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    font-size: 10px;
+    cursor: pointer;
+    background: rgb(240, 79, 79);
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.delete:hover {
+    color: white;
+    background: rgb(240, 73, 73);
+}
+
+.resize-right {
+    position: absolute;
+    right: 3px;
+    font-size: 10px;
+    z-index: 1;
+    cursor: pointer;
+    background: rgb(159, 224, 159);
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.resize-right:hover {
+    color: white;
+    background: rgb(138, 221, 138);
+}
+
+.resize-left {
+    position: absolute;
+    left: 3px;
+    font-size: 10px;
+    z-index: 1;
+    cursor: pointer;
+    background: rgb(159, 224, 159);
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    border-radius: 8px;
+    align-content: center;
+}
+
+.resize-left:hover {
+    color: white;
+    background: rgb(138, 221, 138);
+}
+
+.dragge {
+    background-color: #c5c5c5a4;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 2px;
+    padding: 2px 6px;
+}
+
+.field-input {
+    display: grid;
+    padding: 0 10px;
+}
+
+.field-name-collapse {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.on-drag-enter {
+    background-color: rgba(131, 128, 128, 0.356);
+}

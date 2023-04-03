@@ -1,0 +1,32 @@
+[
+    {
+        "name": "JUMI - Enviar correo",
+        "id": "JUMISendEmail",
+        "appliesTo": ["bpmn:ServiceTask"],
+        "properties": [
+            {
+                "label": "Implementation type",
+                "type": "Hidden",
+                "value": "automatic.JUMISendEmail",
+                "editable": false,
+                "binding": {
+                    "type": "property",
+                    "name": "camunda:class"
+                }
+            },
+            {
+                "label": "Destinatarios",
+                "description": "Ingrese separados por comas",
+                "type": "String",
+                "binding": {
+                    "type": "camunda:field",
+                    "name": "toPeople",
+                    "expression": true
+                },
+                "constraints": {
+                    "notEmpty": true
+                }
+            }
+        ]
+    }
+]

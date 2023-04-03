@@ -1,0 +1,9 @@
+.popup-content button {
+    border-radius: 5px;
+    padding: 6px;
+    font-size: small;
+}
+
+.popup-content button:hover {
+    color: white;
+}

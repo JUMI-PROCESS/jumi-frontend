@@ -1,0 +1,43 @@
+.target {
+    display: flex;
+    padding: 5px 15px;
+    justify-content: space-between;
+    background-color: var(--secundary-back);
+    border-radius: 5px;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.target-info {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.target-options {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    gap: 5px;
+}
+
+.icon {
+    font-size: 20px;
+}
+
+.icon:hover {
+    color: beige;
+}
+
+.h3 {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.h4-sub {
+    font-size: 12px;
+}

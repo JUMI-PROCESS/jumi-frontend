@@ -1,0 +1,42 @@
+.form-grid {
+    display: grid;
+    grid-gap: 1px;
+}
+
+.field-blank {
+    min-height: fit-content;
+    height: 60px;
+    outline: 1px dashed gray;
+}
+
+.more-row {
+    position: absolute;
+    bottom: -7px;
+    font-size: 10px;
+    cursor: pointer;
+    background: rgb(140, 236, 177);
+    width: 15px;
+    display: flex;
+    justify-content: center;
+    border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+}
+
+.more-row:hover {
+    color: white;
+    background: rgb(117, 238, 153);
+}
+
+/* ================================================== */
+.panel-primary {
+    background-color: var(--primary-back);
+    padding: 10px 30px 30px 30px;
+}
+
+.panel-secundary {
+    background-color: white;
+    padding: 10px 30px 30px 30px;
+}
