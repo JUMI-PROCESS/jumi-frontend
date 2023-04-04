@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import {RepositoryContext} from '../../contexts/RepositoryContext'
 
-import { FormRepositoryApi } from '../adapters/FormRepositoryApi';
+import { FormRepository } from '../ports/FormRepository';
+
 import Form from '../components/Form';
 
 import dataTemplate from '/public/templateFields';
@@ -10,7 +12,7 @@ import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
 type Props = {};
 
 function Modeler({}: Props) {
-    const formRepository: FormRepositoryApi = new FormRepositoryApi();
+    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
     const [dataMenu, setDataMenu] = useState({ name: 'Panel', columns: 1, rows: 4 });
     const [data, setData] = useState(null);
@@ -26,6 +28,7 @@ function Modeler({}: Props) {
             const { fields: fields_, ...rest } = res.data[0];
             setData(rest);
             setFields(fields_);
+            console.log(res);
         };
 
         fetchData();

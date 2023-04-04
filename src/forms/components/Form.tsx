@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import {RepositoryContext} from '../../contexts/RepositoryContext'
+
 
 import Field from './Field';
 
@@ -7,9 +9,10 @@ import { FormRepositoryApi } from '../adapters/FormRepositoryApi';
 import './Form.css';
 
 import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
+import { FormRepository } from '../ports/FormRepository';
 
 function Form({ type, data, setData, fields, setFields, position, setPosition, fieldsModeler, setFieldsModeler, dataModeler, setDataModeler, width, height, classes }) {
-    const formRepository: FormRepositoryApi = new FormRepositoryApi();
+    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
     useEffect(() => {
         if (type == MODELER) setFields(fillSpace(data, fields));

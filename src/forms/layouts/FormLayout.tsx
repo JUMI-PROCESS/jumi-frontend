@@ -16,7 +16,7 @@ export default function FormLayout({}: Props) {
         <div style={{ padding: '20px' }}>
             <ul className="tab-list">
                 {Object.entries(OPTIONS).map(([key, value]) => (
-                    <li>
+                    <li key={key}>
                         <Link className="tab" to={value}>{key}</Link>
                     </li>
                 ))}

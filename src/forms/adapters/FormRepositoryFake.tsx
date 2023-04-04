@@ -2,8 +2,10 @@ import axios from 'axios';
 import { Form } from '../domain/Form';
 import { FormRepository } from '../ports/FormRepository';
 
-export class FormRepositoryApi implements FormRepository {
-    forms: Array<Form> = [];
+import forms from '/public/form';
+
+export class FormRepositoryFake implements FormRepository {
+    forms: Array<Form> = [forms.form];
 
     saveForm(form: Form): Promise<boolean> {
         this.forms.push(form);
@@ -11,8 +13,9 @@ export class FormRepositoryApi implements FormRepository {
     }
 
     updateForm(_id: string, form: Form): Promise<Form | null> {
+        console.log(_id, form, this.forms)
         if (_id) {
-            this.forms.map((item) => (item._id == _id ? form : item));
+            this.forms = this.forms.map((item) => (item._id == _id ? form.form : item));
             return Promise.resolve(form);
         } else {
             return Promise.resolve(null);
@@ -20,6 +23,6 @@ export class FormRepositoryApi implements FormRepository {
     }
 
     getFormsByTenant(tenant: string): Promise<Form[]> {
-        return Promise.resolve(this.forms.filter((item) => item.tenant == tenant));
+        return Promise.resolve({data:this.forms});
     }
 }

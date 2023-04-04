@@ -4,11 +4,11 @@ export default {
         rows: 5,
         columns: 5,
         name: 'Formulario de prueba',
-        assigned: null,
+        assigned: [],
         dateRecord: '2023-03-30T23:00:54',
         dateUpdate: null,
         status: 'instanced',
-        tenant: 'lab_quimica',
+        tenant: 'quimica',
         fields: [
             {
                 _id: '231231wekfk2331',
@@ -18,7 +18,7 @@ export default {
                 color: null,
                 options: [],
                 isRequired: true,
-                constrainst: [],
+                constraint: '',
                 gridLocation: {
                     row: 1,
                     column: 1,
@@ -34,7 +34,7 @@ export default {
                 color: null,
                 options: [],
                 isRequired: true,
-                constrainst: [],
+                constraint: '',
                 gridLocation: {
                     row: 1,
                     column: 2,
@@ -50,7 +50,7 @@ export default {
                 color: null,
                 options: [],
                 isRequired: true,
-                constrainst: [],
+                constraint: '',
                 gridLocation: {
                     row: 1,
                     column: 3,
@@ -65,7 +65,7 @@ export default {
                 color: null,
                 options: [],
                 isRequired: true,
-                constrainst: [],
+                constraint: '',
                 gridLocation: {
                     row: 1,
                     column: 4,

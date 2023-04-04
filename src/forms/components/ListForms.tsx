@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import {RepositoryContext} from '../../contexts/RepositoryContext'
+
 import ItemForm from './ItemForm';
 
 import { FormRepositoryApi } from '../adapters/FormRepositoryApi';
 import { Form } from '../domain/Form';
 
 import './ListForms.css';
+import { FormRepository } from '../ports/FormRepository';
 
 type Props = {};
 
 export default function ListForms({}: Props) {
-    const formRepository: FormRepositoryApi = new FormRepositoryApi();
+    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
     const [data, setData] = useState<[Form] | null>(null);
 
@@ -28,7 +31,7 @@ export default function ListForms({}: Props) {
 
     return (
         <div className='b backg-s2 list-forms'>
-            { data.map((item, idx) => <ItemForm name={item.name} date={item.dateRecord} />) }
+            { data.map((item, idx) => <ItemForm key={idx} name={item.name} date={item.dateRecord} />) }
         </div>
     );
 }
