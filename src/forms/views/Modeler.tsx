@@ -36,7 +36,7 @@ function Modeler({}: Props) {
     }
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div className="d-flex backg-p3">
             <Form
                 type={MODELER}
                 data={data}

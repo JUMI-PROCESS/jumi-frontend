@@ -4,8 +4,8 @@ import { Link, Outlet } from 'react-router-dom';
 
 function MainLayout({}) {
     return (
-        <div className="back-primary">
-            <nav className="nav-main">
+        <div className='h-100'>
+            <nav className="nav-main backg-p1 bb-s1">
                 <ul className="d-flex">
                     <Link to={'/inicio'}>
                         <div className="d-flex logo">
@@ -23,7 +23,7 @@ function MainLayout({}) {
                     <div className="nav-user">&#9817;</div>
                 </ul>
             </nav>
-            <div>
+            <div className="backg-p1 h-100">
                 <Outlet />
             </div>
         </div>

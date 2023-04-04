@@ -138,7 +138,7 @@
 
 /* TAB */
 .tab {
-  background-color: var(--tab);
+  background-color: var(--color-p3);
   width: 125px;
   border-radius: 0 10px 0 0;
   text-align: center;
@@ -162,8 +162,7 @@
 }
 
 .tab-list .tab:hover {
-  background-color: var(--primary-back);
-  color: var(--primary-show);
+  background-color: var(--color-p2-shadow);
   box-shadow: none;
 }
 /* TAB */

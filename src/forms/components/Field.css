@@ -96,6 +96,7 @@
     height: fit-content;
     border-radius: 2px;
     padding: 2px 6px;
+    cursor: move;
 }
 
 .field-input {

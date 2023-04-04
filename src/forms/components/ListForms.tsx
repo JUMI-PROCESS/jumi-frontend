@@ -27,7 +27,7 @@ export default function ListForms({}: Props) {
     }
 
     return (
-        <div className='list-forms'>
+        <div className='b backg-s2 list-forms'>
             { data.map((item, idx) => <ItemForm name={item.name} date={item.dateRecord} />) }
         </div>
     );

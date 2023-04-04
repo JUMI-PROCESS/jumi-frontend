@@ -55,19 +55,11 @@
   font-weight: var(--text-size);
 }
 
-a {
-  text-decoration: none;
+html {
+  height: 100%;
 }
 
-button {
-  font-size: var(--text-p1) !important;
-  font-weight: var(--subtitle-size);
-  height: 30px;
-  border-radius: 5px;
-  border: 2px solid var(--color-p2);
-  padding: 2px 10px;
-}
-
+/* HEADS */
 .h1 {
   font-size: var(--title-h1);
   font-weight: var(--title-size);
@@ -102,7 +94,9 @@ button {
   font-size: var(--title-h7);
   font-weight: var(--title-size);
 }
+/* HEADS */
 
+/* SUBHEADS */
 .sh1 {
   font-size: var(--subtitle-h1);
   font-weight: var(--subtitle-size);
@@ -137,7 +131,41 @@ button {
   font-size: var(--subtitle-h7);
   font-weight: var(--subtitle-size);
 }
+/* SUBHEADS */
 
+/* COLORS */
+.backg-p1 {
+  background: var(--color-p1);
+}
+
+.backg-p2 {
+  background: var(--color-p3);
+}
+
+.backg-p3 {
+  background: var(--color-p3);
+}
+
+.backg-s2 {
+  background: var(--color-s2);
+}
+/* COLORS */
+
+a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+button {
+  font-size: var(--text-p1) !important;
+  font-weight: var(--subtitle-size);
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid var(--color-p2);
+  padding: 2px 10px;
+}
+
+/* GRID */
 .d-flex {
   display: flex;
 }
@@ -145,3 +173,26 @@ button {
 .d-grid {
   display: grid;
 }
+
+.h-100 {
+  height: 100%;
+}
+/* GRID */
+
+/* BORDER */
+.b-rd-2 {
+  border-radius: 2px;
+}
+
+.b-rd-5 {
+  border-radius: 5px;
+}
+
+.b-rd-10 {
+  border-radius: 10px;
+}
+
+.bb-s1 {
+  border-bottom: 1px solid var(--color-s1);
+}
+/* BORDER */
