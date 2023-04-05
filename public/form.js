@@ -11,7 +11,7 @@ export default [
         tenant: 'quimica',
         fields: [
             {
-                _id: '231231wekfk2331',
+                _id: 'new231231wekfk2331',
                 name: 'Campo de texto',
                 value: {
                     value: '',

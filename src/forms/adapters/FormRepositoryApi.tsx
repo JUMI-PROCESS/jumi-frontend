@@ -3,22 +3,32 @@ import { Form } from '../domain/Form';
 import { FormRepository } from '../ports/FormRepository';
 
 export class FormRepositoryApi implements FormRepository {
-    limit: number = 10;
+    limit: number = 8;
 
     private URL = axios.create({
         baseURL: 'http://localhost:3000/api/',
-        timeout: 1000,
+        timeout: 3000,
     });
 
-    saveForm(form: Form): Promise<boolean> {
-        return Promise.resolve(false)
+    async saveForm(form: Form): Promise<boolean> {
+        return await this.URL.post(``, { form: form });
     }
 
-    updateForm(_id: string, form: Form): Promise<Form | null> {
-        return this.URL.patch(`?_id=${_id}`, form);
+    async updateForm(_id: string, form: Form): Promise<Form | null> {
+        const { data, status } = await this.URL.patch(`?_id=${_id}`, form);
+        return data;
     }
 
-    getFormsByTenant(tenant: string, query: string, page: number, params: string): Promise<Form[]> {
-        return this.URL.get(`?tenant=${tenant}&page=${page}&limit=${this.limit}&params=${params}`);
+    async getFormById(_id: string): Promise<Form | null> {
+        return this.URL.get(`${_id}`);
+    }
+
+    async getFormsByTenant(tenant: string, query: string, page: number, params: string): Promise<Form[]> {
+        return this.URL.get(`?tenant=${tenant}&query=${query}&page=${page}&limit=${this.limit}&params=${params}`);
+    }
+
+    async getFormsCounter(tenant: string, query: string, params: string): Promise<number> {
+        console.log(query)
+        return this.URL.get(`get/count/?tenant=${tenant}&query=${query}&params=${params}`);
     }
 }

@@ -3,13 +3,13 @@
     "columns": 5,
     "name": "Nuevo formulario",
     "assigned": [],
-    "dateRecord": "2023-03-30T23:00:54",
+    "dateRecord": 0,
     "dateUpdate": null,
     "status": "instanced",
     "tenant": "quimica",
     "fields": [
         {
-            "_id": "231231wekfk2331",
+            "_id": "new231231wekfk2331",
             "name": "Primer campo",
             "value": {
                 "value": "",

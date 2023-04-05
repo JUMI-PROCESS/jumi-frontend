@@ -189,7 +189,10 @@ function Form({
                 return item;
             }
         });
-        if (mode == SAVE) await formRepository.saveForm({ ...data, fields: dataSave });
+        if (mode == SAVE) {
+            const { _id, ...rest} = data;
+            await formRepository.saveForm({ ...rest, fields: dataSave });
+        }
         if (mode == UPDATE) await formRepository.updateForm(data._id, { form: { ...data, fields: dataSave } });
     };
 

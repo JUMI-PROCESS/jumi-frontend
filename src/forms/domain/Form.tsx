@@ -19,7 +19,7 @@ interface IValue {
 }
 
 interface IField {
-    _id: string;
+    _id?: string;
     name: string;
     value?: IValue;
     type: TypeField;
@@ -34,7 +34,7 @@ interface IField {
 }
 
 interface IForm {
-    _id: string;
+    _id?: string;
     name: string,
     rows: number;
     columns: number;
