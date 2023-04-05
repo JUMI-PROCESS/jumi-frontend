@@ -1,5 +1,0 @@
-const PANEL_MENU = 'PANEL_MENU';
-const MODELER = 'MODELER';
-const VIEWVER = 'VIEWVER';
-
-export { PANEL_MENU, MODELER, VIEWVER };

@@ -1,6 +1,6 @@
-import React, { useEffect, useContext } from 'react';
-import {RepositoryContext} from '../../contexts/RepositoryContext'
-
+import React, { useEffect, useContext, MouseEvent } from 'react';
+import { RepositoryContext } from '../../contexts/RepositoryContext';
+import { getRandomId } from '../utilities/Utilities';
 
 import Field from './Field';
 
@@ -8,19 +8,49 @@ import { FormRepositoryApi } from '../adapters/FormRepositoryApi';
 
 import './Form.css';
 
-import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
+import { MODELER, PANEL_MENU, VIEWVER, SAVE, UPDATE } from '../utilities/TypeForm';
 import { FormRepository } from '../ports/FormRepository';
 
-function Form({ type, data, setData, fields, setFields, position, setPosition, fieldsModeler, setFieldsModeler, dataModeler, setDataModeler, width, height, classes }) {
+type Props = {
+    type: string;
+    mode?: string;
+    data: object;
+    setData?: Function;
+    fields: object[];
+    setFields: Function;
+    position: object;
+    setPosition: Function;
+    fieldsModeler?: object[];
+    setFieldsModeler?: Function;
+    dataModeler?: object;
+    setDataModeler?: object;
+    width?: string;
+    heigth?: string;
+    classes?: string;
+};
+
+function Form({
+    type,
+    mode,
+    data,
+    setData,
+    fields,
+    setFields,
+    position,
+    setPosition,
+    fieldsModeler,
+    setFieldsModeler,
+    dataModeler,
+    setDataModeler,
+    width = 'auto',
+    heigth = 'auto',
+    classes,
+}: Props) {
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
     useEffect(() => {
         if (type == MODELER) setFields(fillSpace(data, fields));
     }, [type, data]);
-
-    const getRandomId = () => {
-        return (Math.random() + 1).toString(36).substring(7);
-    };
 
     const fillSpace = (dataTemplate, fieldsTemplate) => {
         let fieldsAux = [];
@@ -28,7 +58,10 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
             for (var j = 0; j < dataTemplate.columns; j++) {
                 var isBusy = fieldsTemplate.find(
                     (item) =>
-                        item.gridLocation.row == i + 1 && j + 1 >= item.gridLocation.column && j + 1 < item.gridLocation.width && !item._id.includes('blank')
+                        item.gridLocation.row == i + 1 &&
+                        j + 1 >= item.gridLocation.column &&
+                        j + 1 < item.gridLocation.width &&
+                        !item._id.includes('blank')
                 );
                 if (!isBusy) {
                     fieldsAux.push({
@@ -52,7 +85,8 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
     const onDrop = (e, item, config = {}) => {
         e.target.className = 'dragge';
         if (position.pre.element && position.new.element) {
-            var copyFields = type == PANEL_MENU ? JSON.parse(JSON.stringify(fieldsModeler)) : JSON.parse(JSON.stringify(fields));
+            var copyFields =
+                type == PANEL_MENU ? JSON.parse(JSON.stringify(fieldsModeler)) : JSON.parse(JSON.stringify(fields));
             var positionPre = JSON.parse(JSON.stringify(position.pre));
             var positionNew = JSON.parse(JSON.stringify(position.new));
             if (!positionPre.element._id.includes('template')) {
@@ -91,7 +125,7 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
 
     const onEnter = (e, item, config = {}) => {
         for (var focus of document.getElementsByClassName('on-drag-enter')) {
-            focus.classList.remove('on-drag-enter')
+            focus.classList.remove('on-drag-enter');
         }
         e.target.className += ' on-drag-enter';
         var idx = fields.findIndex((item) => item._id == e.target.id);
@@ -111,7 +145,8 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
         var dir = config['dir'] | 1;
         var isBlank = fields.find(
             (itemI) =>
-                (dir == 1 ? itemI.gridLocation.column : itemI.gridLocation.width) == (dir == 1 ? item.gridLocation.width : item.gridLocation.column) &&
+                (dir == 1 ? itemI.gridLocation.column : itemI.gridLocation.width) ==
+                    (dir == 1 ? item.gridLocation.width : item.gridLocation.column) &&
                 itemI.gridLocation.row == item.gridLocation.row &&
                 itemI._id.includes('blank')
         );
@@ -124,7 +159,7 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
         }
     };
 
-    const onDelete = (e, item) => {
+    const onDelete = (e: MouseEvent, item) => {
         setFields(
             fillSpace(
                 data,
@@ -153,8 +188,9 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
             } else {
                 return item;
             }
-        })
-        await formRepository.updateForm(data._id, { form: { ...data, fields: dataSave } });
+        });
+        if (mode == SAVE) await formRepository.saveForm({ ...data, fields: dataSave });
+        if (mode == UPDATE) await formRepository.updateForm(data._id, { form: { ...data, fields: dataSave } });
     };
 
     const getOptions = () => {
@@ -173,7 +209,7 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
     };
 
     return (
-        <div className={classes} style={{ position: 'relative', width: width, height: height }}>
+        <div className={classes} style={{ position: 'relative', width: width, height: heigth }}>
             {type == MODELER ? (
                 <div className="more-row" onClick={onMoreRow}>
                     +
@@ -181,8 +217,8 @@ function Form({ type, data, setData, fields, setFields, position, setPosition, f
             ) : (
                 <></>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 10px' }}>
-                <h4>{data.name}</h4>
+            <div className="d-flex justify-content-between py-10" style={{ alignItems: 'center' }}>
+                <div className="h7">{data.name}</div>
                 {getOptions()}
             </div>
             <div

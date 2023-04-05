@@ -1,0 +1,31 @@
+{
+    "rows": 2,
+    "columns": 5,
+    "name": "Nuevo formulario",
+    "assigned": [],
+    "dateRecord": "2023-03-30T23:00:54",
+    "dateUpdate": null,
+    "status": "instanced",
+    "tenant": "quimica",
+    "fields": [
+        {
+            "_id": "231231wekfk2331",
+            "name": "Primer campo",
+            "value": {
+                "value": "",
+                "multivalue": []
+            },
+            "type": "comment",
+            "color": null,
+            "options": [],
+            "isRequired": true,
+            "constraint": "",
+            "gridLocation": {
+                "row": 1,
+                "column": 1,
+                "height": 1,
+                "width": 2
+            }
+        }
+    ]
+}
