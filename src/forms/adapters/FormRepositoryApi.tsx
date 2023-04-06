@@ -6,7 +6,7 @@ export class FormRepositoryApi implements FormRepository {
     limit: number = 8;
 
     private URL = axios.create({
-        baseURL: 'http://192.168.1.9:3000/api/',
+        baseURL: 'http://192.168.1.9:3000/api/form/',
         timeout: 3000
     });
 
@@ -27,12 +27,13 @@ export class FormRepositoryApi implements FormRepository {
         return this.URL.get(`${_id}`);
     }
 
-    async getFormsByTenant(tenant: string, query: string, page: number, params: string): Promise<Form[]> {
-        return this.URL.get(`?tenant=${tenant}&query=${query}&page=${page}&limit=${this.limit}&params=${params}`);
+    async getFormsBy(query: string, page: number, params: string, paramsExtra: string[] = []): Promise<Form[]> {
+        const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
+        return this.URL.get(`?query=${query}&page=${page}&limit=${this.limit}&params=${params}&paramsExtra=${paramsExtra_}`);
     }
 
-    async getFormsCounter(tenant: string, query: string, params: string): Promise<number> {
-        console.log(query);
-        return this.URL.get(`get/count/?tenant=${tenant}&query=${query}&params=${params}`);
+    async getFormsCounter(query: string, params: string, paramsExtra: string[] = []): Promise<number> {
+        const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
+        return this.URL.get(`count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}`);
     }
 }
