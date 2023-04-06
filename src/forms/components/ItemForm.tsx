@@ -7,7 +7,7 @@ import moment from 'moment'
 import './ItemForm.css';
 
 type Props = {
-    _id: string,
+    _id?: string,
     name: string;
     date: number;
 };

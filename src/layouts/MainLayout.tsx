@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import OptionUser from '../components/OptionUser';
 
 function MainLayout({}) {
     const location = useLocation().pathname;
@@ -26,7 +27,7 @@ function MainLayout({}) {
                             <span className={location.startsWith('/formularios') ? 'active-nav' : ''}>FORMULARIOS</span>
                         </Link>
                     </div>
-                    <div className="nav-user">&#9817;</div>
+                    <OptionUser buttonOpen={<div className="nav-user">&#9817;</div>}/>
                 </ul>
             </nav>
             <div className="backg-p1 h-100">

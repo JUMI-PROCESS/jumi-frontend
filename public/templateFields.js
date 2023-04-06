@@ -3,15 +3,13 @@ export default {
         {
             _id: 'template1',
             name: 'Campo de texto',
-            value: {
-                value: '',
-                multivalue: []
-            },
             type: 'text',
-            color: null,
+            color: '',
+            background: '',  
             options: [],
             isRequired: true,
             constraint: '',
+            value: '',
             gridLocation: {
                 row: 1,
                 column: 1,
@@ -22,15 +20,13 @@ export default {
         {
             _id: 'template2',
             name: 'Campo de números',
-            value: {
-                value: '',
-                multivalue: []
-            },
             type: 'number',
-            color: null,
+            color: '',
+            background: '',  
             options: [],
             isRequired: true,
             constraint: '',
+            value: '',
             gridLocation: {
                 row: 2,
                 column: 1,
@@ -41,15 +37,13 @@ export default {
         {
             _id: 'template3',
             name: 'Campo de fecha',
-            value: {
-                value: '',
-                multivalue: []
-            },
             type: 'date',
-            color: null,
+            color: '',
+            background: '',  
             options: [],
             isRequired: true,
             constraint: '',
+            value: '',
             gridLocation: {
                 row: 3,
                 column: 1,
@@ -59,15 +53,13 @@ export default {
         },{
             _id: 'template4',
             name: 'Campo de tiempo',
-            value: {
-                value: '',
-                multivalue: []
-            },
             type: 'time',
-            color: null,
+            color: '',
+            background: '',  
             options: [],
             isRequired: true,
             constraint: '',
+            value: '',
             gridLocation: {
                 row: 4,
                 column: 1,
@@ -77,15 +69,13 @@ export default {
         },{
             _id: 'template5',
             name: 'Seleccion',
-            value: {
-                value: '',
-                multivalue: []
-            },
             type: 'select',
-            color: null,
+            color: '',
+            background: '',  
             options: [],
             isRequired: true,
             constraint: '',
+            value: '',
             gridLocation: {
                 row: 5,
                 column: 1,
@@ -95,15 +85,13 @@ export default {
         },{
             _id: 'template6',
             name: 'Comentario',
-            value: {
-                value: '',
-                multivalue: []
-            },
             type: 'comment',
-            color: null,
+            color: '',
+            background: '',  
             options: [],
             isRequired: true,
             constraint: '',
+            value: '',
             gridLocation: {
                 row: 6,
                 column: 1,

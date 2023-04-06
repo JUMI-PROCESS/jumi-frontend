@@ -62,14 +62,14 @@ function Field({ type, item, onStart, onEnter, onDrop, onExit, onResize, onDelet
             return (
                 <div className="field-input">
                     <span className="field-name-collapse">{field.name}</span>
-                    <select style={{width: '100%'}} type={field.type} name="" id="" value={field.value.value} readOnly />
+                    <select style={{width: '100%'}} type={field.type} name="" id="" value={field.value} readOnly />
                 </div>
             )
         } else {
             return (
                 <div className="field-input">
                     <span className="field-name-collapse">{field.name}</span>
-                    <input style={{width: '100%'}} type={field.type} name="" id="" value={field.value.value} readOnly />
+                    <input style={{width: '100%'}} type={field.type} name="" id="" value={field.value} readOnly />
                 </div>
             );
         }
