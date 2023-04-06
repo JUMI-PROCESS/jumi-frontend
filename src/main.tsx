@@ -11,6 +11,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             clientId="Gql0qF18UhhOxw9DvvRYKpeVzmG0B3tj"
             authorizationParams={{
                 redirect_uri: 'http://127.0.0.1:5173/formularios/todos',
+                audience: "https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/",
+                scope: "profile read:current_user"
             }}
         >
             <App />

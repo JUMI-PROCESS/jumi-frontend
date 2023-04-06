@@ -1,29 +1,56 @@
-import React, { createContext, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+
 import { useAuth0 } from '@auth0/auth0-react';
 
-import Routing from './routing/Router';
-import { RepositoryContextDefault, RepositoryContext } from './contexts/RepositoryContext'
+import { UserContext } from './contexts/UserContext';
+import { RepositoryContextDefault, RepositoryContext } from './contexts/RepositoryContext';
 
-import { FormRepositoryFake } from './forms/adapters/FormRepositoryFake';
+import Routing from './routing/Router';
+
+import axios from 'axios';
 
 import './App.css';
 
 function App() {
-    const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+    const [user, setUser] = useState(null);
+
+    const { loginWithRedirect, isAuthenticated, isLoading, getAccessTokenSilently, user: userCurrent } = useAuth0();
+
+    useEffect(() => {
+        const getAccessToken = async () => {
+            const token = await getAccessTokenSilently();
+            const user_ = await axios.get(
+                `https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/users/${userCurrent?.sub}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            localStorage.setItem('access_token', token);
+            setUser({ ...user_.data, token: token });
+        };
+
+        if (userCurrent) getAccessToken();
+    }, [userCurrent]);
+
     if (isLoading) {
-        return <span>Loading...</span>
+        return <span>Loading...</span>;
     }
-    if(!isAuthenticated){
+
+    if (!isAuthenticated) {
         loginWithRedirect();
-        return <span>Loading...</span>
+        return <span>Loading auth...</span>;
+    }
+
+    if (!user) {
+        return <span>Loading user...</span>;
     }
 
     return (
         <BrowserRouter>
-            <RepositoryContext.Provider value={{form:RepositoryContextDefault}}>
-                <Routing></Routing> 
-            </RepositoryContext.Provider>
+            <UserContext.Provider value={user}>
+                <RepositoryContext.Provider value={{ form: RepositoryContextDefault }}>
+                    <Routing></Routing>
+                </RepositoryContext.Provider>
+            </UserContext.Provider>
         </BrowserRouter>
     );
 }

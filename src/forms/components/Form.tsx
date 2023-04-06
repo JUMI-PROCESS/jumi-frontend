@@ -190,7 +190,7 @@ function Form({
             }
         });
         if (mode == SAVE) {
-            const { _id, ...rest} = data;
+            const { _id, ...rest } = data;
             await formRepository.saveForm({ ...rest, fields: dataSave });
         }
         if (mode == UPDATE) await formRepository.updateForm(data._id, { form: { ...data, fields: dataSave } });
@@ -213,13 +213,6 @@ function Form({
 
     return (
         <div className={classes} style={{ position: 'relative', width: width, height: heigth }}>
-            {type == MODELER ? (
-                <div className="more-row" onClick={onMoreRow}>
-                    +
-                </div>
-            ) : (
-                <></>
-            )}
             <div className="d-flex justify-content-between py-10" style={{ alignItems: 'center' }}>
                 <div className="h7">{data.name}</div>
                 {getOptions()}
@@ -232,6 +225,13 @@ function Form({
                     gridTemplateRows: `repeat(${data.rows}, max-content)`,
                 }}
             >
+                {type == MODELER ? (
+                    <div className="more-row" onClick={onMoreRow}>
+                        +
+                    </div>
+                ) : (
+                    <></>
+                )}
                 {fields.map((item, i) => {
                     if (!item._id.includes('blank')) {
                         return (

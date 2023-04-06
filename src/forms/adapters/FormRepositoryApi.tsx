@@ -7,8 +7,12 @@ export class FormRepositoryApi implements FormRepository {
 
     private URL = axios.create({
         baseURL: 'http://192.168.1.9:3000/api/',
-        timeout: 3000,
+        timeout: 3000
     });
+
+    setConfig(config: Record<string, any>): void {
+        this.URL.defaults.headers.common['Authorization'] = `Bearer ${config['token']}`;
+    }
 
     async saveForm(form: Form): Promise<boolean> {
         return await this.URL.post(``, { form: form });
@@ -28,7 +32,7 @@ export class FormRepositoryApi implements FormRepository {
     }
 
     async getFormsCounter(tenant: string, query: string, params: string): Promise<number> {
-        console.log(query)
+        console.log(query);
         return this.URL.get(`get/count/?tenant=${tenant}&query=${query}&params=${params}`);
     }
 }

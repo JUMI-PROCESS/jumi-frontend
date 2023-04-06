@@ -241,7 +241,7 @@ button {
 .active {
   text-decoration: underline;
   font-weight: var(--title-size);
-  background: var(--color-p1-shadow);
+  background: var(--color-s2);
 }
 
 .active-nav {

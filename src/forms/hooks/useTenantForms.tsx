@@ -1,18 +1,24 @@
-import {useState, useEffect, useContext} from 'react'
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { Form } from '../domain/Form';
 import { FormRepository } from '../ports/FormRepository';
 
 type Props = {
-    query: string,
-    page: number,
-}
+    query: string;
+    page: number;
+};
 
-export default function UseTenantForms({query, page}: Props) {
+export default function UseTenantForms({ query, page }: Props) {
+    const userContext: Record<string, any> = useContext(UserContext);
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
     const [data, setData] = useState<[Form] | null>(null);
     const [size, setSize] = useState(0);
+
+    useEffect(() => {
+        formRepository.setConfig({ token: `${userContext['token']}` });
+    });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,5 +47,5 @@ export default function UseTenantForms({query, page}: Props) {
         fetchData();
     }, [page]);
 
-    return {data, size, page};
+    return { data, size, page };
 }

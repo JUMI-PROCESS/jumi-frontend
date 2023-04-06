@@ -27,7 +27,7 @@ function MainLayout({}) {
                             <span className={location.startsWith('/formularios') ? 'active-nav' : ''}>FORMULARIOS</span>
                         </Link>
                     </div>
-                    <OptionUser buttonOpen={<div className="nav-user">&#9817;</div>}/>
+                    <OptionUser buttonOpen={<div className="nav-user">&#9817;</div>} />
                 </ul>
             </nav>
             <div className="backg-p1 h-100">
