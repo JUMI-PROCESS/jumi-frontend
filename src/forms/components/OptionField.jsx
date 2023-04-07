@@ -7,7 +7,7 @@ import './OptionField.css';
 
 function OptionField({ buttonOpen, props, setProps }) {
     const onProps = (e) => {
-        if (e.target.name == 'value') props.value.value = e.target.value;
+        if (e.target.name == 'value') props.value = e.target.value;
         else props[e.target.name] = e.target.value;
         setProps(props);
     };
@@ -23,7 +23,7 @@ function OptionField({ buttonOpen, props, setProps }) {
                     </div>
                     <div style={{ padding: '0' }} className="field-input">
                         <span>Valor por defecto</span>
-                        <input style={{ width: '90%' }} type={props.type} name="value" id="" value={props.value.value} onChange={onProps} />
+                        <input style={{ width: '90%' }} type={props.type} name="value" id="" value={props.value} onChange={onProps} />
                     </div>
                     <div style={{ padding: '0' }} className="field-input">
                         <span>Tipo</span>

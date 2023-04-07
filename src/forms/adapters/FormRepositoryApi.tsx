@@ -19,7 +19,7 @@ export class FormRepositoryApi implements FormRepository {
     }
 
     async updateForm(_id: string, form: Form): Promise<Form | null> {
-        const { data, status } = await this.URL.patch(`?_id=${_id}`, form);
+        const { data, status } = await this.URL.patch(`?_id=${_id}`, {form: form});
         return data;
     }
 
@@ -27,13 +27,13 @@ export class FormRepositoryApi implements FormRepository {
         return this.URL.get(`${_id}`);
     }
 
-    async getFormsBy(query: string, page: number, params: string, paramsExtra: string[] = []): Promise<Form[]> {
+    async getFormsBy(query: string, page: number, params: string, paramsExtra: string[] = [], type: string = ''): Promise<Form[]> {
         const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
-        return this.URL.get(`?query=${query}&page=${page}&limit=${this.limit}&params=${params}&paramsExtra=${paramsExtra_}`);
+        return this.URL.get(`?query=${query}&page=${page}&limit=${this.limit}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`);
     }
 
-    async getFormsCounter(query: string, params: string, paramsExtra: string[] = []): Promise<number> {
+    async getFormsCounter(query: string, params: string, paramsExtra: string[] = [], type: string = ''): Promise<number> {
         const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
-        return this.URL.get(`count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}`);
+        return this.URL.get(`count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`);
     }
 }

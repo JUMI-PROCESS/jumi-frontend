@@ -8,24 +8,23 @@ type Props = {
     query: string;
     page: number;
     paramsExtra: string[];
+    type: string
 };
 
-export default function UseTenantForms({ query, page, paramsExtra }: Props) {
+export default function UseTenantForms({ query, page, paramsExtra, type }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
     const [data, setData] = useState<[Form] | null>(null);
     const [size, setSize] = useState(0);
 
-    console.log(paramsExtra);
-
     useEffect(() => {
         formRepository.setConfig({ token: `${userContext['token']}` });
-    },[]);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await formRepository.getFormsCounter(query, 'name', paramsExtra);
+            const res = await formRepository.getFormsCounter(query, 'name', paramsExtra, type);
             setSize(res.data.counter);
         };
 
@@ -34,7 +33,7 @@ export default function UseTenantForms({ query, page, paramsExtra }: Props) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra);
+            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra, type);
             setData(res.data);
         };
 
@@ -44,7 +43,7 @@ export default function UseTenantForms({ query, page, paramsExtra }: Props) {
     useEffect(() => {
         console.log('REFRESCANDO HOOK');
         const fetchData = async () => {
-            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra);
+            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra, type);
             setData(res.data);
         };
 

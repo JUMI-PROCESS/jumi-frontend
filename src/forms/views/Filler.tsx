@@ -17,7 +17,7 @@ type Props = {
     form: IForm | null;
 };
 
-function Modeler({ form }: Props) {
+function Filler({ form }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
@@ -26,7 +26,7 @@ function Modeler({ form }: Props) {
     const [dataMenu, setDataMenu] = useState({ name: 'Panel', columns: 1, rows: 4 });
     const [data, setData] = useState<object | null>(null);
     const [fields, setFields] = useState<object[] | null>(null);
-    const [mode, setMode] = useState(SAVE);
+    const [mode, setMode] = useState(VIEWVER);
     const [position, setPosition] = useState({
         pre: { element: null, coor: null },
         new: { element: null, coor: null },
@@ -38,7 +38,7 @@ function Modeler({ form }: Props) {
 
     useEffect(() => {
         if (!form) {
-            setMode(UPDATE);
+            setMode(VIEWVER);
             const fetchData = async () => {
                 const res = await formRepository.getFormById(_id);
                 const { fields: fieldsAux, ...dataAux } = res.data;
@@ -61,7 +61,7 @@ function Modeler({ form }: Props) {
     return (
         <div className="d-flex backg-p3">
             <Form
-                type={MODELER}
+                type={VIEWVER}
                 mode={mode}
                 data={data}
                 setData={setData}
@@ -69,24 +69,11 @@ function Modeler({ form }: Props) {
                 setFields={setFields}
                 position={position}
                 setPosition={setPosition}
-                width={'80%'}
+                width={'100%'}
                 classes={'panel-primary'}
-            />
-            <Form
-                type={PANEL_MENU}
-                data={dataMenu}
-                fields={dataTemplate.fields}
-                setFields={() => {}}
-                position={position}
-                setPosition={setPosition}
-                fieldsModeler={fields}
-                setFieldsModeler={setFields}
-                dataModeler={data}
-                width={'20%'}
-                classes={'panel-secundary'}
             />
         </div>
     );
 }
 
-export default Modeler;
+export default Filler;

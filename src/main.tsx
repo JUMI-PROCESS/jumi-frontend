@@ -9,10 +9,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <Auth0Provider
             domain="dev-rk8v8gk7wiwt6rgi.us.auth0.com"
             clientId="Gql0qF18UhhOxw9DvvRYKpeVzmG0B3tj"
+            cacheLocation={'localstorage' as const}
             authorizationParams={{
                 redirect_uri: 'http://127.0.0.1:5173/formularios/todos',
-                audience: "https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/",
-                scope: "profile read:current_user"
+                audience: 'https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/',
+                scope: 'profile read:current_user',
             }}
         >
             <App />

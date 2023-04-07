@@ -6,10 +6,11 @@ import { useLocation } from 'react-router-dom';
 import useTenantForms from '../hooks/useTenantForms';
 import ListForms from '../components/ListForms';
 
-const ParamsType: Record<string, Array<string>> = {
-    '/formularios/disponibles': ['availableLabels', 'availableUsers'],
-    '/formularios/tareas': ['assignedLabel', 'assignedUser'],
-    '/formularios/todos': [],
+const ParamsType: Record<string, Record<string, string | Array<string>>> = {
+    '/formularios/disponibles': { type: 'instanced', params: ['availableLabels', 'availableUsers'] },
+    '/formularios/tareas': { type: 'instanced', params: ['assignedLabel', 'assignedUser'] },
+    '/formularios/todos': { type: '', params: [] },
+    '/formularios': { type: '', params: [] },
 };
 
 type Props = {};
@@ -21,7 +22,12 @@ export default function AllForms({}: Props) {
     const [query, setQuery] = useState('');
     const [page, setPage] = useState(0);
 
-    const { data, size } = useTenantForms({ query, page, paramsExtra: ParamsType[pathname] });
+    const { data, size } = useTenantForms({
+        query,
+        page,
+        paramsExtra: ParamsType[pathname]['params'] as Array<string>,
+        type: ParamsType[pathname]['type'] as string,
+    });
 
     useEffect(() => {
         setPage(0);

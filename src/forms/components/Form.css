@@ -4,6 +4,10 @@
     position: relative;
 }
 
+.form-grid-view {
+    outline: 0;
+}
+
 .field-blank {
     min-height: fit-content;
     height: 60px;

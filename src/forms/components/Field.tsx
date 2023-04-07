@@ -6,7 +6,7 @@ import './Field.css';
 
 import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
 
-function Field({ type, item, onStart, onEnter, onDrop, onExit, onResize, onDelete, onChange }) {
+function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize, onDelete, onChange }) {
     const onDragStart = (e, item) => {
         if (type == MODELER) onStart(e, item);
         else if (type == PANEL_MENU) {
@@ -51,6 +51,11 @@ function Field({ type, item, onStart, onEnter, onDrop, onExit, onResize, onDelet
         if (type == MODELER) onDelete(e, item, config);
     };
 
+    const onChangeForm = (e, field) => {
+        field.value = e.target.value;
+        onChange(field);
+    };
+
     const getTypeField = (field) => {
         if (field.type == 'comment') {
             return (
@@ -62,14 +67,14 @@ function Field({ type, item, onStart, onEnter, onDrop, onExit, onResize, onDelet
             return (
                 <div className="field-input">
                     <span className="field-name-collapse">{field.name}</span>
-                    <select style={{width: '100%'}} type={field.type} name="" id="" value={field.value} readOnly />
+                    <select style={{ width: '100%' }} name={field._id} id="" value={field.value} onChange={(e) => onChangeForm(e, field)} />
                 </div>
-            )
+            );
         } else {
             return (
                 <div className="field-input">
                     <span className="field-name-collapse">{field.name}</span>
-                    <input style={{width: '100%'}} type={field.type} name="" id="" value={field.value} readOnly />
+                    <input style={{ width: '100%' }} type={field.type} name={field._id} id="" value={field.value} onChange={(e) => onChangeForm(e, field)} />
                 </div>
             );
         }
@@ -81,25 +86,29 @@ function Field({ type, item, onStart, onEnter, onDrop, onExit, onResize, onDelet
             style={{
                 gridColumn: `${item.gridLocation.column} / ${item.gridLocation.width}`,
                 gridRow: `${item.gridLocation.row} / ${item.gridLocation.height}`,
-                width: 'initial'
+                width: 'initial',
             }}
-            className="grid-area"
+            className={`grid-area ${type == VIEWVER ? 'form-grid-view' : ''}`}
         >
             <div key={item._id} className="no-point draggable">
-                <div
-                    className="dragge"
-                    key={item._id}
-                    id={item._id}
-                    onDragEnter={(e) => onDragEnter(e, item)}
-                    onDragStart={(e) => onDragStart(e, item)}
-                    onDragEnd={(e) => onDragDrop(e, item)}
-                    onDragExit={(e) => onDragExit(e, item)}
-                    draggable
-                >
-                    &#9782;
-                </div>
+                {type == MODELER || type == PANEL_MENU ? (
+                    <div
+                        className="dragge"
+                        key={item._id}
+                        id={item._id}
+                        onDragEnter={(e) => onDragEnter(e, item)}
+                        onDragStart={(e) => onDragStart(e, item)}
+                        onDragEnd={(e) => onDragDrop(e, item)}
+                        onDragExit={(e) => onDragExit(e, item)}
+                        draggable
+                    >
+                        &#9782;
+                    </div>
+                ) : (
+                    <></>
+                )}
                 {getTypeField(item)}
-                {type == MODELER ? (
+                {type == MODELER && type != VIEWVER ? (
                     <>
                         <OptionField
                             buttonOpen={

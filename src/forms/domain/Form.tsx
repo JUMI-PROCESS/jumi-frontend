@@ -1,4 +1,4 @@
-enum StatusForm {
+export enum StatusForm {
     instanced = 'instanced',
     received = 'received',
 }
@@ -19,7 +19,7 @@ enum TypeField {
     comment = 'comment',
 }
 
-interface IField {
+export interface IField {
     _id?: string;
     name: string;
     value?: string | number;

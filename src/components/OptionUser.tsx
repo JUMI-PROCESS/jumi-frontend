@@ -16,7 +16,7 @@ function OptionUser({ buttonOpen }: props) {
     const user: Record<string, any> = useContext(UserContext);
 
     const onLogout = () => {
-        localStorage.remove('access_token');
+        localStorage.removeItem('access_token');
         logout({ logoutParams: { returnTo: 'http://127.0.0.1:5173' } });
     };
 

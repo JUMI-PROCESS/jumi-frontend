@@ -1,28 +1,50 @@
 import React, { useEffect, useContext, MouseEvent } from 'react';
+import { useLocation } from 'react-router-dom';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { getRandomId } from '../utilities/Utilities';
-
-import Field from './Field';
-
-import { FormRepositoryApi } from '../adapters/FormRepositoryApi';
-
-import './Form.css';
+import { UserContext } from '../../contexts/UserContext';
 
 import { MODELER, PANEL_MENU, VIEWVER, SAVE, UPDATE } from '../utilities/TypeForm';
 import { FormRepository } from '../ports/FormRepository';
+import { Form as IForm, IField, StatusForm } from '../domain/Form';
+
+import Field from './Field';
+
+import './Form.css';
+
+const ParamsType: Record<string, Record<string, boolean>> = {
+    '/formularios/disponibles': { isDelete: false, isEdit: false, isInfo: true, isFill: false },
+    '/formularios/tareas': { isDelete: false, isEdit: false, isInfo: true, isFill: false },
+    '/formularios/todos': { isDelete: true, isEdit: true, isInfo: true, isFill: false },
+    '/formularios': { isDelete: true, isEdit: true, isInfo: true, isFill: false },
+};
+
+interface IConfig {
+    [key: string]: string | number | boolean;
+}
+
+interface IPosition {
+    element: Record<string, number | string>;
+    coor: number;
+}
+
+interface IPositionCurrent {
+    pre: IPosition;
+    new: IPosition;
+}
 
 type Props = {
     type: string;
     mode?: string;
-    data: object;
+    data: IForm;
     setData?: Function;
-    fields: object[];
+    fields: Array<IField>;
     setFields: Function;
-    position: object;
+    position: IPositionCurrent;
     setPosition: Function;
-    fieldsModeler?: object[];
+    fieldsModeler?: Array<IField>;
     setFieldsModeler?: Function;
-    dataModeler?: object;
+    dataModeler?: IForm;
     setDataModeler?: object;
     width?: string;
     heigth?: string;
@@ -46,21 +68,31 @@ function Form({
     heigth = 'auto',
     classes,
 }: Props) {
+    const userContext: Record<string, any> = useContext(UserContext);
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
+
+    useEffect(() => {
+        formRepository.setConfig({ token: `${userContext['token']}` });
+    }, []);
+
+    const { pathname } = useLocation();
+    const actions = ParamsType[pathname] || ParamsType['/formularios/tareas'];
 
     useEffect(() => {
         if (type == MODELER) setFields(fillSpace(data, fields));
     }, [type, data]);
 
-    const fillSpace = (dataTemplate, fieldsTemplate) => {
-        let fieldsAux = [];
-        for (var i = 0; i < dataTemplate.rows; i++) {
-            for (var j = 0; j < dataTemplate.columns; j++) {
-                var isBusy = fieldsTemplate.find(
-                    (item) =>
+    const fillSpace = (dataTemplate?: IForm, fieldsTemplate?: Array<IField>) => {
+        let fieldsAux: Array<Record<string, string | number | object> | IField> = [];
+        if (!dataTemplate && !fieldsTemplate) return fieldsAux;
+        for (var i = 0; dataTemplate && i < dataTemplate.rows; i++) {
+            for (var j = 0; dataTemplate && j < dataTemplate.columns; j++) {
+                var isBusy = (fieldsTemplate || []).find(
+                    (item: IField) =>
                         item.gridLocation.row == i + 1 &&
                         j + 1 >= item.gridLocation.column &&
                         j + 1 < item.gridLocation.width &&
+                        item._id &&
                         !item._id.includes('blank')
                 );
                 if (!isBusy) {
@@ -74,16 +106,17 @@ function Form({
                         },
                     });
                 } else {
-                    var isRepeat = fieldsAux.find((item) => item._id == isBusy._id);
-                    if (!isRepeat) fieldsAux.push(isBusy);
+                    var isRepeat = fieldsAux.find((item) => item._id == isBusy?._id);
+                    const { _id, ...rest } = isBusy;
+                    if (!isRepeat && _id) fieldsAux.push({ _id, ...rest });
                 }
             }
         }
         return fieldsAux;
     };
 
-    const onDrop = (e, item, config = {}) => {
-        e.target.className = 'dragge';
+    const onDrop = (e: React.DragEvent<HTMLElement>, item: IField, config = {}) => {
+        (e.target as HTMLElement).className = 'dragge';
         if (position.pre.element && position.new.element) {
             var copyFields =
                 type == PANEL_MENU ? JSON.parse(JSON.stringify(fieldsModeler)) : JSON.parse(JSON.stringify(fields));
@@ -97,7 +130,7 @@ function Form({
                 positionPre.element._id = `new${getRandomId()}`;
                 copyFields[position.new.coor] = positionPre.element;
             }
-            if (type == PANEL_MENU) setFieldsModeler(fillSpace(dataModeler, copyFields));
+            if (type == PANEL_MENU && setFieldsModeler) setFieldsModeler(fillSpace(dataModeler, copyFields));
             else if (type == MODELER) setFields(fillSpace(data, copyFields));
             setPosition({
                 pre: { element: null, coor: null },
@@ -106,9 +139,9 @@ function Form({
         }
     };
 
-    const onStart = (e, item, config = {}) => {
+    const onStart = (e: React.DragEvent<HTMLElement>, item: IField, config: IConfig = {}) => {
         var isMenu = config['isMenu'] || false;
-        var idx = fields.findIndex((item) => item._id == e.target.id);
+        var idx = fields.findIndex((item) => item._id == (e.target as HTMLElement).id);
         if (idx > -1 && !isMenu) {
             setPosition({
                 ...position,
@@ -123,12 +156,12 @@ function Form({
         }
     };
 
-    const onEnter = (e, item, config = {}) => {
+    const onEnter = (e: React.DragEvent<HTMLElement>, item: IField, config: IConfig = {}) => {
         for (var focus of document.getElementsByClassName('on-drag-enter')) {
             focus.classList.remove('on-drag-enter');
         }
-        e.target.className += ' on-drag-enter';
-        var idx = fields.findIndex((item) => item._id == e.target.id);
+        (e.target as HTMLElement).className += ' on-drag-enter';
+        var idx = fields.findIndex((item) => item._id == (e.target as HTMLElement).id);
         if (idx > -1 && position.pre.element._id != item._id) {
             setPosition({
                 ...position,
@@ -137,29 +170,30 @@ function Form({
         }
     };
 
-    const onExit = (e, item, config = {}) => {
-        e.target.className = e.target.className.replace('on-drag-enter', '');
+    const onExit = (e: React.DragEvent<HTMLElement>, item: IField, config: IConfig = {}) => {
+        (e.target as HTMLElement).className = (e.target as HTMLElement).className.replace('on-drag-enter', '');
     };
 
-    const onResize = (e, item, config) => {
-        var dir = config['dir'] | 1;
+    const onResize = (e: React.MouseEvent<HTMLElement>, item: IField, config: IConfig = {}) => {
+        var dir = config['dir'] || 1;
         var isBlank = fields.find(
             (itemI) =>
                 (dir == 1 ? itemI.gridLocation.column : itemI.gridLocation.width) ==
                     (dir == 1 ? item.gridLocation.width : item.gridLocation.column) &&
                 itemI.gridLocation.row == item.gridLocation.row &&
+                itemI._id &&
                 itemI._id.includes('blank')
         );
         var pos = fields.findIndex((itemI) => itemI._id == item._id);
         if (isBlank) {
             var copyFields = JSON.parse(JSON.stringify(fields));
             if (dir == 1) copyFields[pos].gridLocation.width = item.gridLocation.width + dir;
-            else copyFields[pos].gridLocation.column = item.gridLocation.column + dir;
+            else copyFields[pos].gridLocation.column = item.gridLocation.column + (dir as number);
             setFields(fillSpace(data, copyFields));
         }
     };
 
-    const onDelete = (e: MouseEvent, item) => {
+    const onDelete = (e: MouseEvent<HTMLElement>, item: IField) => {
         setFields(
             fillSpace(
                 data,
@@ -168,21 +202,22 @@ function Form({
         );
     };
 
-    const onChangeField = (field) => {
+    const onChangeField = (field: IField) => {
         setFields(fields.map((item) => (item._id == field._id ? field : item)));
     };
 
     const onMoreRow = () => {
         const dataAux = JSON.parse(JSON.stringify(data));
         dataAux.rows += 1;
-        setData(dataAux);
+        if (setData) setData(dataAux);
         setFields(fillSpace(dataAux, fields));
     };
 
     const onSave = async () => {
-        let dataSave = fields.filter((item) => !item._id.includes('blank'));
+        console.log(mode)
+        let dataSave = fields.filter((item) => item._id && !item._id.includes('blank'));
         dataSave = dataSave.map((item) => {
-            if (item._id.includes('new')) {
+            if (item._id && item._id.includes('new')) {
                 const { _id, ...rest } = item;
                 return rest;
             } else {
@@ -191,25 +226,35 @@ function Form({
         });
         if (mode == SAVE) {
             const { _id, ...rest } = data;
-            await formRepository.saveForm({ ...rest, fields: dataSave });
+            await formRepository.saveForm(new IForm({ ...data, fields: dataSave }));
         }
-        if (mode == UPDATE) await formRepository.updateForm(data._id, { form: { ...data, fields: dataSave } });
+        if (mode == UPDATE) await formRepository.updateForm(data._id || '', new IForm({ ...data, fields: dataSave }));
+        if (mode == VIEWVER) await formRepository.updateForm(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }));
     };
 
     const getOptions = () => {
-        if (type == MODELER) {
+        if (type == MODELER || type == VIEWVER) {
             return (
                 <div style={{ display: 'inline-flex' }}>
                     <button style={{ marginRight: '2px' }} disabled>
                         RETORNAR
                     </button>
-                    <button style={{ marginLeft: '2px' }} onClick={onSave}>
-                        GUARDAR
-                    </button>
+                    {type == MODELER ? (
+                        <button style={{ marginLeft: '2px' }} onClick={onSave}>
+                            GUARDAR
+                        </button>
+                    ) : (
+                        <button style={{ marginLeft: '2px' }} onClick={onSave}>
+                            ENVIAR
+                        </button>
+                    )}
                 </div>
             );
         }
     };
+
+    if (!actions)
+        return <></>
 
     return (
         <div className={classes} style={{ position: 'relative', width: width, height: heigth }}>
@@ -219,7 +264,7 @@ function Form({
             </div>
             <div
                 id="form"
-                className="form-grid"
+                className={`form-grid`}
                 style={{
                     gridTemplateColumns: `repeat(${data.columns}, minmax(0, 1fr))`,
                     gridTemplateRows: `repeat(${data.rows}, max-content)`,
@@ -233,11 +278,12 @@ function Form({
                     <></>
                 )}
                 {fields.map((item, i) => {
-                    if (!item._id.includes('blank')) {
+                    if (item._id && !item._id.includes('blank')) {
                         return (
                             <Field
                                 key={i}
                                 type={type}
+                                actions={actions}
                                 item={item}
                                 onStart={onStart}
                                 onEnter={onEnter}
