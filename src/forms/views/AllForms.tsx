@@ -5,18 +5,14 @@ import { useLocation } from 'react-router-dom';
 
 import useTenantForms from '../hooks/useTenantForms';
 import ListForms from '../components/ListForms';
-
-const ParamsType: Record<string, Record<string, string | Array<string>>> = {
-    '/formularios/disponibles': { type: 'instanced', params: ['availableLabels', 'availableUsers'] },
-    '/formularios/tareas': { type: 'instanced', params: ['assignedLabel', 'assignedUser'] },
-    '/formularios/todos': { type: '', params: [] },
-    '/formularios': { type: '', params: [] },
-};
+import { ParamsType } from '../utilities/TypeForm';
+import { FormSocket } from '../ports/FormSocket';
 
 type Props = {};
 
 export default function AllForms({}: Props) {
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
+
     const { pathname } = useLocation();
 
     const [query, setQuery] = useState('');
@@ -29,6 +25,8 @@ export default function AllForms({}: Props) {
         type: ParamsType[pathname]['type'] as string,
     });
 
+    
+    
     useEffect(() => {
         setPage(0);
     }, [query]);

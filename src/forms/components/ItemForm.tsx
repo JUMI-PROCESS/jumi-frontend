@@ -5,13 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 
 import './ItemForm.css';
-
-const ParamsType: Record<string, Record<string, boolean>> = {
-    '/formularios/disponibles': { isDelete: false, isEdit: false, isInfo: true, isFill: false },
-    '/formularios/tareas': { isDelete: false, isEdit: false, isInfo: true, isFill: true },
-    '/formularios/todos': { isDelete: true, isEdit: true, isInfo: true, isFill: false },
-    '/formularios': { isDelete: true, isEdit: true, isInfo: true, isFill: false },
-};
+import { ParamsType } from '../utilities/TypeForm';
 
 type Props = {
     _id?: string;
@@ -23,7 +17,7 @@ export default function ItemForm({ _id, name, date }: Props) {
     const navigate = useNavigate();
 
     const { pathname } = useLocation();
-    const actions = ParamsType[pathname];
+    const actions = ParamsType[pathname]['actions'] as Record<string, boolean>;
 
     const onNavigate = () => {
         if (actions['isFill'])

@@ -1,23 +1,16 @@
 import React, { useEffect, useContext, MouseEvent } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { getRandomId } from '../utilities/Utilities';
 import { UserContext } from '../../contexts/UserContext';
 
-import { MODELER, PANEL_MENU, VIEWVER, SAVE, UPDATE } from '../utilities/TypeForm';
+import { MODELER, PANEL_MENU, VIEWVER, SAVE, UPDATE, ParamsType } from '../utilities/TypeForm';
 import { FormRepository } from '../ports/FormRepository';
 import { Form as IForm, IField, StatusForm } from '../domain/Form';
 
 import Field from './Field';
 
 import './Form.css';
-
-const ParamsType: Record<string, Record<string, boolean>> = {
-    '/formularios/disponibles': { isDelete: false, isEdit: false, isInfo: true, isFill: false },
-    '/formularios/tareas': { isDelete: false, isEdit: false, isInfo: true, isFill: false },
-    '/formularios/todos': { isDelete: true, isEdit: true, isInfo: true, isFill: false },
-    '/formularios': { isDelete: true, isEdit: true, isInfo: true, isFill: false },
-};
 
 interface IConfig {
     [key: string]: string | number | boolean;
@@ -71,12 +64,14 @@ function Form({
     const userContext: Record<string, any> = useContext(UserContext);
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         formRepository.setConfig({ token: `${userContext['token']}` });
     }, []);
 
     const { pathname } = useLocation();
-    const actions = ParamsType[pathname] || ParamsType['/formularios/tareas'];
+    const actions = (ParamsType[pathname] || ParamsType['/formularios/tareas'] || ParamsType['/formularios/modelador'])['actions'];
 
     useEffect(() => {
         if (type == MODELER) setFields(fillSpace(data, fields));
@@ -227,9 +222,18 @@ function Form({
         if (mode == SAVE) {
             const { _id, ...rest } = data;
             await formRepository.saveForm(new IForm({ ...data, fields: dataSave }));
+            navigate('/formularios/todos');
+
         }
-        if (mode == UPDATE) await formRepository.updateForm(data._id || '', new IForm({ ...data, fields: dataSave }));
-        if (mode == VIEWVER) await formRepository.updateForm(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }));
+        if (mode == UPDATE) {
+            await formRepository.updateForm(data._id || '', new IForm({ ...data, fields: dataSave }));
+            navigate('/formularios/todos');
+
+        }
+        if (mode == VIEWVER) {
+            await formRepository.updateForm(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }));
+            navigate('/formularios/tareas');
+        }
     };
 
     const getOptions = () => {
@@ -258,7 +262,7 @@ function Form({
 
     return (
         <div className={classes} style={{ position: 'relative', width: width, height: heigth }}>
-            <div className="d-flex justify-content-between py-10" style={{ alignItems: 'center' }}>
+            <div className="meta-form d-flex justify-content-between py-10" style={{ alignItems: 'center' }}>
                 <div className="h7">{data.name}</div>
                 {getOptions()}
             </div>

@@ -1,4 +1,19 @@
+@media (max-width: 1000px){
 
+}
+
+@media (max-width: 750px){
+  .nav-main>ul{
+    height: fit-content !important;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  .nav-main{
+    
+  }
+}
 
 #root {
   width: 100%;
@@ -146,13 +161,15 @@
   font-size: 12px;
   box-shadow: 0px 4px 4px 0px #00000040 inset;
   color: black;
-  padding: 8px
+  padding: 8px;
 }
 
 .tab-list {
   display: flex;
   padding: 0;
   margin: 0;
+  overflow-x: auto;
+  width: 100%;
 }
 
 .tab-list li {

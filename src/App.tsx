@@ -11,6 +11,7 @@ import Routing from './routing/Router';
 import axios from 'axios';
 
 import './App.css';
+import { SocketContext, SocketContextDefault } from './contexts/FormSocketContext';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -48,7 +49,9 @@ function App() {
         <BrowserRouter>
             <UserContext.Provider value={user}>
                 <RepositoryContext.Provider value={{ form: RepositoryContextDefault }}>
-                    <Routing></Routing>
+                    <SocketContext.Provider value={{ form: SocketContextDefault}}>
+                        <Routing></Routing>
+                    </SocketContext.Provider>
                 </RepositoryContext.Provider>
             </UserContext.Provider>
         </BrowserRouter>

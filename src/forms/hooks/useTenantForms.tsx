@@ -3,6 +3,8 @@ import { UserContext } from '../../contexts/UserContext';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { Form } from '../domain/Form';
 import { FormRepository } from '../ports/FormRepository';
+import { SocketContext } from '../../contexts/FormSocketContext';
+import { FormSocket } from '../ports/FormSocket';
 
 type Props = {
     query: string;
@@ -14,6 +16,7 @@ type Props = {
 export default function UseTenantForms({ query, page, paramsExtra, type }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
     const formRepository: FormRepository = useContext(RepositoryContext)['form'];
+    const formSocket: FormSocket = useContext(SocketContext)['form'];
 
     const [data, setData] = useState<[Form] | null>(null);
     const [size, setSize] = useState(0);
@@ -49,6 +52,18 @@ export default function UseTenantForms({ query, page, paramsExtra, type }: Props
 
         fetchData();
     }, [page, JSON.stringify(paramsExtra)]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra, type);
+            setData(res.data);
+        };
+          formSocket.onForm(fetchData);
+    
+      return () => {
+        formSocket.URL.off('signal', fetchData);
+      }
+    }, [])
 
     return { data, size };
 }
