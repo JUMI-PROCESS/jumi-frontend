@@ -4,7 +4,12 @@ import { BrowserRouter } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { UserContext } from './contexts/UserContext';
-import { RepositoryContextDefault, RepositoryContext } from './contexts/RepositoryContext';
+import {
+    FormRepositoryContextDefault as form,
+    ProcessRepositoryContextDefault as process,
+    DeploymentRepositoryContextDefault as deployment,
+    RepositoryContext,
+} from './contexts/RepositoryContext';
 
 import Routing from './routing/Router';
 
@@ -16,7 +21,14 @@ import { SocketContext, SocketContextDefault } from './contexts/FormSocketContex
 function App() {
     const [user, setUser] = useState(null);
 
-    const { loginWithRedirect, isAuthenticated, isLoading, getAccessTokenSilently, user: userCurrent } = useAuth0();
+    const {
+        loginWithRedirect,
+        isAuthenticated,
+        isLoading,
+        getAccessTokenSilently,
+        user: userCurrent,
+        logout,
+    } = useAuth0();
 
     useEffect(() => {
         const getAccessToken = async () => {
@@ -37,6 +49,7 @@ function App() {
     }
 
     if (!isAuthenticated) {
+        logout();
         loginWithRedirect();
         return <span>Loading auth...</span>;
     }
@@ -48,8 +61,10 @@ function App() {
     return (
         <BrowserRouter>
             <UserContext.Provider value={user}>
-                <RepositoryContext.Provider value={{ form: RepositoryContextDefault }}>
-                    <SocketContext.Provider value={{ form: SocketContextDefault}}>
+                <RepositoryContext.Provider
+                    value={{ form, process, deployment }}
+                >
+                    <SocketContext.Provider value={{ form: SocketContextDefault }}>
                         <Routing></Routing>
                     </SocketContext.Provider>
                 </RepositoryContext.Provider>

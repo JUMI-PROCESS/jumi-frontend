@@ -15,18 +15,23 @@ function OptionUser({ buttonOpen }: props) {
     const { logout } = useAuth0();
     const user: Record<string, any> = useContext(UserContext);
 
+    const onPermissions = () => {
+        Notification.requestPermission();
+    }
+
     const onLogout = () => {
         localStorage.removeItem('access_token');
-        logout({ logoutParams: { returnTo: 'http://127.0.0.1:5173' } });
+        logout({ logoutParams: { returnTo: 'https://192.168.1.9:5173' } });
     };
 
     return (
         <div>
             <Popup trigger={buttonOpen} position="bottom right" closeOnDocumentClick>
                 <div style={{ padding: '10px' }}>
-                    <div style={{ padding: '0' }} className="field-input" onClick={onLogout}>
+                    <div style={{ padding: '0' }} className="field-input">
                         <span>{user['nickname']}</span>
-                        <span>SALIR</span>
+                        <span onClick={onPermissions}>Notifiaciones</span>
+                        <span onClick={onLogout}>SALIR</span>
                     </div>
                 </div>
             </Popup>

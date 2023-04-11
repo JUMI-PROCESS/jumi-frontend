@@ -1,28 +1,28 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
-import { FormRepository } from '../ports/FormRepository';
 import { useLocation } from 'react-router-dom';
 
-import useTenantForms from '../hooks/useTenantForms';
-import ListForms from '../components/ListForms';
-import { ParamsType } from '../utilities/TypeForm';
-import { FormSocket } from '../ports/FormSocket';
+import useTenantProcesses from '../hooks/useTenantProcesses';
+import ListProcess from '../components/ListProcesses';
+import { ParamsType } from '../utilities/TypeProcess';
+import { EntityRepository } from '../../ports/EntityRepository';
+import { IProcess } from '../domain/Process';
+// import { FormSocket } from '../ports/FormSocket';
 
 type Props = {};
 
-export default function AllForms({}: Props) {
-    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
-
+export default function AllForms({}: Props) {    
     const { pathname } = useLocation();
+    const processRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['process'];
 
     const [query, setQuery] = useState('');
     const [page, setPage] = useState(0);
 
-    const { data, size } = useTenantForms({
+    const { data, size } = useTenantProcesses({
         query,
         page,
         paramsExtra: ParamsType[pathname]['params'] as Array<string>,
-        type: ParamsType[pathname]['type'] as string,
+        type: ParamsType[pathname]['type'] as string
     });    
     
     useEffect(() => {
@@ -34,13 +34,13 @@ export default function AllForms({}: Props) {
     }
 
     return (
-        <ListForms
+        <ListProcess
             data={data}
             query={query}
             setQuery={setQuery}
             page={page}
             setPage={setPage}
-            limit={formRepository.limit}
+            limit={processRepository.limit}
             size={size}
         />
     );

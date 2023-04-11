@@ -6,8 +6,9 @@ import './Field.css';
 
 import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
 
-function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize, onDelete, onChange }) {
+function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize, onDelete, onChange, isDrag }) {
     const onDragStart = (e, item) => {
+        console.log(e);
         if (type == MODELER) onStart(e, item);
         else if (type == PANEL_MENU) {
             onStart(e, item, {
@@ -17,6 +18,7 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
     };
 
     const onDragEnter = (e, item) => {
+        console.log(e);
         if (type == MODELER) onEnter(e, item);
         else if (type == PANEL_MENU) {
             onEnter(e, item, {
@@ -26,6 +28,7 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
     };
 
     const onDragDrop = (e, item) => {
+        console.log(e)
         if (type == MODELER) onDrop(e, item);
         else if (type == PANEL_MENU) {
             onDrop(e, item, {
@@ -67,14 +70,27 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
             return (
                 <div className="field-input">
                     <span className="field-name-collapse">{field.name}</span>
-                    <select style={{ width: '100%' }} name={field._id} id="" value={field.value} onChange={(e) => onChangeForm(e, field)} />
+                    <select
+                        style={{ width: '100%' }}
+                        name={field._id}
+                        id=""
+                        value={field.value}
+                        onChange={(e) => onChangeForm(e, field)}
+                    />
                 </div>
             );
         } else {
             return (
                 <div className="field-input">
                     <span className="field-name-collapse">{field.name}</span>
-                    <input style={{ width: '100%' }} type={field.type} name={field._id} id="" value={field.value} onChange={(e) => onChangeForm(e, field)} />
+                    <input
+                        style={{ width: '100%' }}
+                        type={field.type}
+                        name={field._id}
+                        id=""
+                        value={field.value}
+                        onChange={(e) => onChangeForm(e, field)}
+                    />
                 </div>
             );
         }
@@ -100,7 +116,10 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
                         onDragStart={(e) => onDragStart(e, item)}
                         onDragEnd={(e) => onDragDrop(e, item)}
                         onDragExit={(e) => onDragExit(e, item)}
-                        draggable
+                        onTouchStart={(e) => onDragStart(e, item)}
+                        onTouchMove={(e) => onDragEnter(e, item)}
+                        onTouchEnd={(e) => onDragDrop(e, item)}
+                        draggable={isDrag}
                     >
                         &#9782;
                     </div>

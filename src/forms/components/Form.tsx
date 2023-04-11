@@ -11,6 +11,8 @@ import { Form as IForm, IField, StatusForm } from '../domain/Form';
 import Field from './Field';
 
 import './Form.css';
+import { useDimention } from '../../hooks/useDimention';
+import { EntityRepository } from '../../ports/EntityRepository';
 
 interface IConfig {
     [key: string]: string | number | boolean;
@@ -62,16 +64,19 @@ function Form({
     classes,
 }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
-    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
+    const formRepository: EntityRepository<IForm> = useContext(RepositoryContext)['form'];
 
     const navigate = useNavigate();
+    const { width: width_ } = useDimention();
 
     useEffect(() => {
         formRepository.setConfig({ token: `${userContext['token']}` });
     }, []);
 
     const { pathname } = useLocation();
-    const actions = (ParamsType[pathname] || ParamsType['/formularios/tareas'] || ParamsType['/formularios/modelador'])['actions'];
+    const actions = (ParamsType[pathname] || ParamsType['/formularios/tareas'] || ParamsType['/formularios/modelador'])[
+        'actions'
+    ];
 
     useEffect(() => {
         if (type == MODELER) setFields(fillSpace(data, fields));
@@ -209,7 +214,7 @@ function Form({
     };
 
     const onSave = async () => {
-        console.log(mode)
+        console.log(mode);
         let dataSave = fields.filter((item) => item._id && !item._id.includes('blank'));
         dataSave = dataSave.map((item) => {
             if (item._id && item._id.includes('new')) {
@@ -221,17 +226,18 @@ function Form({
         });
         if (mode == SAVE) {
             const { _id, ...rest } = data;
-            await formRepository.saveForm(new IForm({ ...data, fields: dataSave }));
+            await formRepository.save(new IForm({ ...data, fields: dataSave }));
             navigate('/formularios/todos');
-
         }
         if (mode == UPDATE) {
-            await formRepository.updateForm(data._id || '', new IForm({ ...data, fields: dataSave }));
+            await formRepository.update(data._id || '', new IForm({ ...data, fields: dataSave }));
             navigate('/formularios/todos');
-
         }
         if (mode == VIEWVER) {
-            await formRepository.updateForm(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }));
+            await formRepository.update(
+                data._id || '',
+                new IForm({ ...data, status: StatusForm.received, fields: dataSave })
+            );
             navigate('/formularios/tareas');
         }
     };
@@ -257,8 +263,7 @@ function Form({
         }
     };
 
-    if (!actions)
-        return <></>
+    if (!actions) return <></>;
 
     return (
         <div className={classes} style={{ position: 'relative', width: width, height: heigth }}>
@@ -296,6 +301,7 @@ function Form({
                                 onResize={onResize}
                                 onDelete={onDelete}
                                 onChange={onChangeField}
+                                isDrag={width_ >= 750}
                             />
                         );
                     } else {
@@ -310,7 +316,7 @@ function Form({
                                 }}
                                 onDragEnter={(e) => onEnter(e, item)}
                                 onDragExit={(e) => onExit(e, item)}
-                                draggable
+                                draggable={width_ >= 750}
                             ></div>
                         );
                     }

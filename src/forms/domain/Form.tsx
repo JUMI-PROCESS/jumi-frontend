@@ -37,7 +37,7 @@ export interface IField {
     };
 }
 
-interface IForm {
+export interface IForm {
     _id?: string;
     rows: number;
     columns: number;

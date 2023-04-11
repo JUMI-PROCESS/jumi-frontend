@@ -1,16 +1,13 @@
-import { io } from 'socket.io-client';
+import { DefaultEventsMap } from '@socket.io/component-emitter';
+import { io, Socket } from 'socket.io-client';
 
-import { Form } from '../domain/Form';
-import { FormRepository } from '../ports/FormRepository';
 import { FormSocket } from '../ports/FormSocket';
-import { Socket } from 'dgram';
 
 export class FormSocketImp implements FormSocket {
-    URL = io('http://localhost:3000', {transports: ['websocket']}); 
+    URL = io('https://192.168.1.9:3000', { transports: ['websocket'] });
 
-    setConfig(config: Record<string, any>): void {
-    }
-    onForm(onSignal: Function): Function {
-        return () => this.URL.on('signal', onSignal as any);
+    setConfig(config: Record<string, any>): void {}
+    onForm(onSignal: Function): Socket<DefaultEventsMap, DefaultEventsMap> {
+        return this.URL.on('signal', onSignal as any);
     }
 }

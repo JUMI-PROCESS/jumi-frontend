@@ -1,0 +1,93 @@
+@media (max-width: 1000px) {
+}
+
+@media (max-width: 750px) {
+    .process-options {
+        display: flex;
+        padding: 5px 10px;
+        gap: 10px;
+        justify-content: space-between !important;
+        overflow-x: auto;
+    }
+}
+
+#modeler {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    background: var(--color-s2);
+}
+
+#canvas {
+    height: 100%;
+    width: 100%;
+}
+
+#properties-panel {
+    top: 0;
+    right: 0;
+    background: rgb(236, 236, 236);
+    height: 100%;
+    width: 250px;
+    max-width: 250px;
+    position: absolute;
+    transition-duration: 1s;
+}
+
+#properties-swap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex !important;
+    align-items: center;
+    right: 245px;
+    z-index: 1;
+    padding: 0 5px;
+    transition-duration: 0.1s;
+}
+
+.hidden-swap {
+    right: 0 !important;
+}
+
+.hidden-swap > .swap {
+    transform: rotate(180deg);
+    border-radius: 0 5px 5px 0;
+}
+
+.hidden-properties-panel {
+    right: -250px !important;
+    display: none;
+}
+
+.swap {
+    background-color: var(--color-p1);
+    cursor: pointer;
+    border-radius: 5px 0 0 5px;
+    padding: 10px 12px;
+    animation: background-color 2s ease-in;
+    transition-delay: 2s;
+}
+
+.swap:hover {
+    background: var(--color-p3);
+}
+
+.process-options {
+    display: flex;
+    justify-content: end;
+    padding: 5px 10px;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.djs-minimap {
+    top: 0 !important;
+    right: 250px;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.bjs-container .djs-palette {
+    width: 100px;
+}

@@ -1,24 +1,24 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
-import { Form } from '../domain/Form';
-import { FormRepository } from '../ports/FormRepository';
+import { Form, IForm } from '../domain/Form';
 import { SocketContext } from '../../contexts/FormSocketContext';
 import { FormSocket } from '../ports/FormSocket';
+import { EntityRepository } from '../../ports/EntityRepository';
 
 type Props = {
     query: string;
     page: number;
     paramsExtra: string[];
-    type: string
+    type: string;
 };
 
 export default function UseTenantForms({ query, page, paramsExtra, type }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
-    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
+    const formRepository: EntityRepository<IForm> = useContext(RepositoryContext)['form'];
     const formSocket: FormSocket = useContext(SocketContext)['form'];
 
-    const [data, setData] = useState<[Form] | null>(null);
+    const [data, setData] = useState<Array<IForm>>([]);
     const [size, setSize] = useState(0);
 
     useEffect(() => {
@@ -27,43 +27,36 @@ export default function UseTenantForms({ query, page, paramsExtra, type }: Props
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await formRepository.getFormsCounter(query, 'name', paramsExtra, type);
+            const res = await formRepository.getCounter(query, 'name', paramsExtra, type);
             setSize(res.data.counter);
         };
 
         fetchData();
-    }, [query, JSON.stringify(paramsExtra)]);
+    }, [query, page, JSON.stringify(paramsExtra)]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra, type);
+            const res = await formRepository.getBy(query, page, 'name', paramsExtra, type);
             setData(res.data);
         };
 
         fetchData();
-    }, [query, JSON.stringify(paramsExtra)]);
+    }, [query, page, JSON.stringify(paramsExtra)]);
 
     useEffect(() => {
-        console.log('REFRESCANDO HOOK');
-        const fetchData = async () => {
-            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra, type);
+        const fetchData = async (data_: IForm) => {
+            const res = await formRepository.getBy(query, page, 'name', paramsExtra, type);
             setData(res.data);
-        };
+            setSize((size) => size + 1);
 
-        fetchData();
-    }, [page, JSON.stringify(paramsExtra)]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await formRepository.getFormsBy(query, page, 'name', paramsExtra, type);
-            setData(res.data);
+            new Notification('JUMI', { body: 'Se agrego un nuevo formulario' });
         };
-          formSocket.onForm(fetchData);
-    
-      return () => {
-        formSocket.URL.off('signal', fetchData);
-      }
-    }, [])
+        formSocket.onForm(fetchData);
+
+        return () => {
+            formSocket.URL.off('signal', fetchData);
+        };
+    }, [query, page, JSON.stringify(paramsExtra), type]);
 
     return { data, size };
 }

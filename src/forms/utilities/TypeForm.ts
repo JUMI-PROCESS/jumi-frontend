@@ -25,4 +25,5 @@ export const ParamsType: Record<string, Record<string, string | Array<string> | 
     },
     '/formularios/modelador': { type: '', params: [], actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false } },
     '/formularios': { type: '', params: [], actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false } },
+    '/': { type: '', params: [], actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false } },
 };
