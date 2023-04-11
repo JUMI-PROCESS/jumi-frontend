@@ -7,24 +7,25 @@ import ListProcess from '../components/ListProcesses';
 import { ParamsType } from '../utilities/TypeProcess';
 import { EntityRepository } from '../../ports/EntityRepository';
 import { IDeployment } from '../domain/Process';
+import UseTenantDeployments from '../hooks/useTenantDeployments';
 // import { FormSocket } from '../ports/FormSocket';
 
 type Props = {};
 
-export default function AllDeployments({}: Props) {    
+export default function AllDeployments({}: Props) {  
+
     const { pathname } = useLocation();
     const processRepository: EntityRepository<IDeployment> = useContext(RepositoryContext)['deployment'];
 
     const [query, setQuery] = useState('');
     const [page, setPage] = useState(0);
 
-    const { data, size } = useTenantProcesses({
+    const { data, size } = UseTenantDeployments({
         query,
         page,
         paramsExtra: ParamsType[pathname]['params'] as Array<string>,
         type: ParamsType[pathname]['type'] as string
     });    
-    
     useEffect(() => {
         setPage(0);
     }, [query]);

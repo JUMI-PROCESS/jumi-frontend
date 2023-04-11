@@ -6,7 +6,7 @@ type Props = {};
 
 enum OPTIONS {
     GUARDADOS = '/procesos/guardados',
-    DESPLEAGOS = '/procesos/desplegados',
+    DESPLEGADOS = '/procesos/desplegados',
     DEFINICIONES = '/procesos/definiciones',
     INSTANCIADOS = '/procesos/instanciados',
     MODELADOR = '/procesos/modelador',

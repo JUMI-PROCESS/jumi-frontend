@@ -17,7 +17,7 @@ export const ParamsType: Record<string, Record<string, string | Array<string> | 
     '/procesos/desplegados': {
         source: 'deployment',
         type: '',
-        params: ['owner'],
+        params: [],
         actions: { isDelete: false, isEdit: false, isInfo: true, isFill: true },
     },
     '/procesos/instanciados': {
