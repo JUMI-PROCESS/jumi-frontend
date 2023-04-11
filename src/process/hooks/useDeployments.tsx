@@ -1,8 +1,10 @@
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { useContext, useEffect, useState } from 'react';
+
 import { RepositoryContext } from '../../contexts/RepositoryContext';
-import { EntityRepository } from '../../ports/EntityRepository';
-import { IProcess } from '../domain/Process';
+import { UserContext } from '../../contexts/UserContext';
+import { EntityRepository } from '../../output.ports/EntityRepository';
+import { IProcess as IDeployment } from '../domain/Process';
+
 // import { SocketContext } from '../../contexts/FormSocketContext';
 // import { FormSocket } from '../ports/FormSocket';
 
@@ -13,12 +15,12 @@ type Props = {
     type: string;
 };
 
-export default function UseTenantForms({ query, page, paramsExtra, type }: Props) {
+export default function UseDeployments({ query, page, paramsExtra, type }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
-    const instanceRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['process'];
+    const instanceRepository: EntityRepository<IDeployment> = useContext(RepositoryContext)['deployment'];
     // const formSocket: FormSocket = useContext(SocketContext)['form'];
 
-    const [data, setData] = useState<Array<IProcess>>([]);
+    const [data, setData] = useState<Array<IDeployment>>([]);
     const [size, setSize] = useState(0);
 
     useEffect(() => {

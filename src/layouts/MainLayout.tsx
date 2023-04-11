@@ -12,7 +12,7 @@ function MainLayout({}) {
                 <ul className="d-flex">
                     <Link to={'/inicio'}>
                         <div className="d-flex logo">
-                            <img src="/img/unicauca.png" alt="logo-unicauca" height={40} />
+                            <img src="/public/img/unicauca.png" alt="logo-unicauca" height={40} />
                             <div className="d-grid" style={{ margin: '0 10px', textAlign: 'center' }}>
                                 <div className="h7">Departamento de Química</div>
                                 <div className="sh7">Universidad del Cauca</div>

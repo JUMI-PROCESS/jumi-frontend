@@ -4,7 +4,7 @@ import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { Form, IForm } from '../domain/Form';
 import { SocketContext } from '../../contexts/FormSocketContext';
 import { FormSocket } from '../ports/FormSocket';
-import { EntityRepository } from '../../ports/EntityRepository';
+import { EntityRepository } from '../../output.ports/EntityRepository';
 
 type Props = {
     query: string;

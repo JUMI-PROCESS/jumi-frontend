@@ -1,3 +1,5 @@
+import { deserialize } from '../../utilities/Object';
+
 export enum StatusForm {
     instanced = 'instanced',
     received = 'received',
@@ -53,8 +55,6 @@ export interface IForm {
     assignedUser: string;
     callbackTask: string;
     fields: Array<IField>;
-
-    deserialize(objData: object): void;
 }
 
 export class Form implements IForm {
@@ -75,20 +75,6 @@ export class Form implements IForm {
     fields: Array<IField> = [];
 
     constructor(objData: object) {
-        this.deserialize(objData);
-    }
-
-    deserialize(objData: object) {
-        const keys: string[] = Object.keys(this);
-
-        for (const key of keys) {
-            if (objData.hasOwnProperty(key)) {
-                type FormKey = keyof typeof this;
-                type ObjectKey = keyof typeof objData;
-                const key_ = key as FormKey;
-                const keyOnject = key as ObjectKey;
-                this[key_] = objData[keyOnject];
-            }
-        }
+        deserialize(objData, this);
     }
 }

@@ -12,7 +12,7 @@ import Field from './Field';
 
 import './Form.css';
 import { useDimention } from '../../hooks/useDimention';
-import { EntityRepository } from '../../ports/EntityRepository';
+import { EntityRepository } from '../../output.ports/EntityRepository';
 
 interface IConfig {
     [key: string]: string | number | boolean;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { EntityRepository } from '../../ports/EntityRepository';
+import { EntityRepository } from '../../output.ports/EntityRepository';
 import { Form, IForm } from '../domain/Form';
 
 export class FormRepositoryApi implements EntityRepository<IForm> {

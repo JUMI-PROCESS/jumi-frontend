@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { FormRepositoryApi } from '../forms/adapters/FormRepositoryApi';
-import { DeploymentRepositoryApi } from '../process/adapters/DeploymentRepositoryApi';
-import { ProcessRepositoryApi } from '../process/adapters/ProcessRepositoryApi';
+import { DeploymentRepositoryApi } from '../process/output.adapters/DeploymentRepositoryApi';
+import { ProcessRepositoryApi } from '../process/output.adapters/ProcessRepositoryApi';
 
 export const FormRepositoryContextDefault = new FormRepositoryApi();
 export const ProcessRepositoryContextDefault = new ProcessRepositoryApi();

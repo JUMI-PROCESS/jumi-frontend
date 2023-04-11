@@ -37,6 +37,7 @@ function Router() {
                     {/* <Route path="tareas/:_id" element={<Filler form={null} />} /> */}
                     <Route path="guardados" element={<AllProcesses />} />
                     <Route path="desplegados" element={<AllDeployments />} />
+                    <Route path="definiciones" element={<AllProcesses />} />
                     <Route path="instanciados" element={<AllProcesses />} />
                     <Route path="modelador" element={<ModelerProcess.default process={new Process({})} />} />
                     <Route path="modelador/:_id" element={<ModelerProcess.default process={null} />} />

@@ -1,31 +1,30 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { RepositoryContext } from '../../contexts/RepositoryContext';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import useTenantProcesses from '../hooks/useTenantProcesses';
+import { RepositoryContext } from '../../contexts/RepositoryContext';
+import { EntityRepository } from '../../output.ports/EntityRepository';
 import ListProcess from '../components/ListProcesses';
+import { IProcess as IDeployment } from '../domain/Process';
+import UseDeployments from '../hooks/useDeployments';
 import { ParamsType } from '../utilities/TypeProcess';
-import { EntityRepository } from '../../ports/EntityRepository';
-import { IDeployment } from '../domain/Process';
-import UseTenantDeployments from '../hooks/useTenantDeployments';
+
 // import { FormSocket } from '../ports/FormSocket';
 
 type Props = {};
 
-export default function AllDeployments({}: Props) {  
-
+export default function AllDeployments({}: Props) {
     const { pathname } = useLocation();
     const processRepository: EntityRepository<IDeployment> = useContext(RepositoryContext)['deployment'];
 
     const [query, setQuery] = useState('');
     const [page, setPage] = useState(0);
 
-    const { data, size } = UseTenantDeployments({
+    const { data, size } = UseDeployments({
         query,
         page,
         paramsExtra: ParamsType[pathname]['params'] as Array<string>,
-        type: ParamsType[pathname]['type'] as string
-    });    
+        type: ParamsType[pathname]['type'] as string,
+    });
     useEffect(() => {
         setPage(0);
     }, [query]);
