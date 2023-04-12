@@ -43,6 +43,7 @@ export default function AllForms({}: Props) {
             setPage={setPage}
             limit={processRepository.limit}
             size={size}
+            type={'procesos'}
         />
     );
 }

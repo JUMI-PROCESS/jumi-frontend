@@ -15,7 +15,7 @@ import CamundaCustomModdle from 'camunda-bpmn-moddle/resources/camunda.json';
 import minimapModule from 'diagram-js-minimap';
 import 'diagram-js-minimap/assets/diagram-js-minimap.css';
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import {
     BpmnPropertiesPanelModule,
@@ -39,8 +39,11 @@ export default function Modeler({ process }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
     const processRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['process'];
     const deploymentRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['deployment'];
+    const definitionRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['definition'];
 
     const _id = useParams()['_id'] || '';
+    const [searchParams, setSearchParams] = useSearchParams();
+    const queryPath = searchParams.get('type') ?? 'procesos';
 
     const [container, setContainer] = useState(null);
     const [modeler, setModeler] = useState(null);
@@ -51,6 +54,7 @@ export default function Modeler({ process }: Props) {
     useEffect(() => {
         processRepository.setConfig({ token: `${userContext['token']}` });
         deploymentRepository.setConfig({ token: `${userContext['token']}` });
+        definitionRepository.setConfig({ token: `${userContext['token']}` });
     }, []);
 
     useEffect(() => {
@@ -58,7 +62,14 @@ export default function Modeler({ process }: Props) {
             if (_id) {
                 setMode(UPDATE);
                 const fetchData = async () => {
-                    const res = await processRepository.getById(_id);
+                    let res: Promise<any>;
+                    if (queryPath.includes('procesos'))
+                        res = await processRepository.getById(_id);
+                    else if (queryPath.includes('desplegados'))
+                        res = await deploymentRepository.getById(_id);
+                    else
+                        res = await definitionRepository.getById(_id);
+
                     setData(res.data);
                     modeler.importXML(atob(res.data.source));
                     setModeler(modeler);

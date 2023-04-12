@@ -17,6 +17,7 @@ import * as ModelerProcess from '../process/views/Modeler';
 import AllProcesses from '../process/views/AllProcesses';
 import { Process } from '../process/domain/Process';
 import AllDeployments from '../process/views/AllDeployments';
+import AllDefinitions from '../process/views/AllDefinitions';
 
 function Router() {
     return (
@@ -37,7 +38,7 @@ function Router() {
                     {/* <Route path="tareas/:_id" element={<Filler form={null} />} /> */}
                     <Route path="guardados" element={<AllProcesses />} />
                     <Route path="desplegados" element={<AllDeployments />} />
-                    <Route path="definiciones" element={<AllProcesses />} />
+                    <Route path="definiciones" element={<AllDefinitions />} />
                     <Route path="instanciados" element={<AllProcesses />} />
                     <Route path="modelador" element={<ModelerProcess.default process={new Process({})} />} />
                     <Route path="modelador/:_id" element={<ModelerProcess.default process={null} />} />

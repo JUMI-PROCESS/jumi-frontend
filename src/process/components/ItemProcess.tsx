@@ -11,9 +11,10 @@ type Props = {
     _id?: string;
     name: string;
     date: number;
+    type: string;
 };
 
-export default function ItemProcess({ _id, name, date }: Props) {
+export default function ItemProcess({ _id, name, date, type }: Props) {
     const navigate = useNavigate();
 
     const { pathname } = useLocation();
@@ -33,7 +34,7 @@ export default function ItemProcess({ _id, name, date }: Props) {
             <div className="target-options">
                 {actions['isDelete'] ? <div className="icon">&#9746;</div> : <></>}
                 {actions['isEdit'] ? (
-                    <Link to={`/procesos/modelador/${_id}`} className="icon">
+                    <Link to={`/procesos/modelador/${_id}/?type=${type}`} className="icon">
                         &#9998;
                     </Link>
                 ) : (

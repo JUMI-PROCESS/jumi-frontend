@@ -9,6 +9,8 @@ import {
   DeploymentRepositoryContextDefault as deployment,
   FormRepositoryContextDefault as form,
   ProcessRepositoryContextDefault as process,
+  InstanceRepositoryApiContextDefault as instance,
+  DefinitionRepositoryApiContextDefault as definition,
   RepositoryContext,
 } from './contexts/RepositoryContext';
 import { UserContext } from './contexts/UserContext';
@@ -56,7 +58,7 @@ function App() {
   return (
     <BrowserRouter>
       <UserContext.Provider value={user}>
-        <RepositoryContext.Provider value={{ form, process, deployment }}>
+        <RepositoryContext.Provider value={{ form, process, deployment, instance, definition }}>
           <SocketContext.Provider value={{ form: SocketContextDefault }}>
             <Routing></Routing>
           </SocketContext.Provider>
