@@ -1,18 +1,17 @@
-import React, { useEffect, useContext, MouseEvent } from 'react';
+import React, { MouseEvent, useContext, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import { RepositoryContext } from '../../contexts/RepositoryContext';
-import { getRandomId } from '../utilities/Utilities';
 import { UserContext } from '../../contexts/UserContext';
-
-import { MODELER, PANEL_MENU, VIEWVER, SAVE, UPDATE, ParamsType } from '../utilities/TypeForm';
-import { FormRepository } from '../ports/FormRepository';
-import { Form as IForm, IField, StatusForm } from '../domain/Form';
-
-import Field from './Field';
-
-import './Form.css';
 import { useDimention } from '../../hooks/useDimention';
 import { EntityRepository } from '../../output.ports/EntityRepository';
+import { IField, Form as IForm, StatusForm } from '../domain/Form';
+import { FormRepository } from '../ports/FormRepository';
+import { MODELER, PANEL_MENU, ParamsType, SAVE, UPDATE, VIEWVER } from '../utilities/TypeForm';
+import { getRandomId } from '../utilities/Utilities';
+import Field from './Field';
+import './Form.css';
 
 interface IConfig {
     [key: string]: string | number | boolean;
@@ -93,7 +92,7 @@ function Form({
                         j + 1 >= item.gridLocation.column &&
                         j + 1 < item.gridLocation.width &&
                         item._id &&
-                        !item._id.includes('blank')
+                        !item._id.includes('blank'),
                 );
                 if (!isBusy) {
                     fieldsAux.push({
@@ -182,7 +181,7 @@ function Form({
                     (dir == 1 ? item.gridLocation.width : item.gridLocation.column) &&
                 itemI.gridLocation.row == item.gridLocation.row &&
                 itemI._id &&
-                itemI._id.includes('blank')
+                itemI._id.includes('blank'),
         );
         var pos = fields.findIndex((itemI) => itemI._id == item._id);
         if (isBlank) {
@@ -197,8 +196,8 @@ function Form({
         setFields(
             fillSpace(
                 data,
-                fields.filter((itemI) => itemI._id != item._id)
-            )
+                fields.filter((itemI) => itemI._id != item._id),
+            ),
         );
     };
 
@@ -225,18 +224,25 @@ function Form({
         });
         if (mode == SAVE) {
             const { _id, ...rest } = data;
-            await formRepository.save(new IForm({ ...data, fields: dataSave }));
+            formRepository
+                .save(new IForm({ ...data, fields: dataSave }))
+                .then((data) => toast.success('Formulario guardado'))
+                .catch((error) => toast.error(error));
+
             navigate('/formularios/todos');
         }
         if (mode == UPDATE) {
-            await formRepository.update(data._id || '', new IForm({ ...data, fields: dataSave }));
+            formRepository
+                .update(data._id || '', new IForm({ ...data, fields: dataSave }))
+                .then((data) => toast.success('Formulario actualizado'))
+                .catch((error) => toast.error(error));
             navigate('/formularios/todos');
         }
         if (mode == VIEWVER) {
-            await formRepository.complete(
-                data._id || '',
-                new IForm({ ...data, status: StatusForm.received, fields: dataSave })
-            );
+            await formRepository
+                .complete(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }))
+                .then((data) => toast.success('Formulario diligenciado'))
+                .catch((error) => toast.error(error));
             navigate('/formularios/tareas');
         }
     };

@@ -16,6 +16,7 @@ import minimapModule from 'diagram-js-minimap';
 import 'diagram-js-minimap/assets/diagram-js-minimap.css';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import {
     BpmnPropertiesPanelModule,
@@ -63,12 +64,9 @@ export default function Modeler({ process }: Props) {
                 setMode(UPDATE);
                 const fetchData = async () => {
                     let res: Promise<any>;
-                    if (queryPath.includes('procesos'))
-                        res = await processRepository.getById(_id);
-                    else if (queryPath.includes('desplegados'))
-                        res = await deploymentRepository.getById(_id);
-                    else
-                        res = await definitionRepository.getById(_id);
+                    if (queryPath.includes('procesos')) res = await processRepository.getById(_id);
+                    else if (queryPath.includes('desplegados')) res = await deploymentRepository.getById(_id);
+                    else res = await definitionRepository.getById(_id);
 
                     setData(res.data);
                     modeler.importXML(atob(res.data.source));
@@ -131,11 +129,19 @@ export default function Modeler({ process }: Props) {
             const rootElement = modeler.get('canvas').getRootElement();
             const { name } = rootElement['businessObject'];
             if (mode == SAVE) {
-                modeler.saveXML().then((xml: any) => processRepository.save(new Process({ name, source: xml.xml })));
+                modeler.saveXML().then((xml: any) =>
+                    processRepository
+                        .save(new Process({ name, source: xml.xml }))
+                        .then((data) => toast.success('Proceso guardado'))
+                        .catch((error) => toast.error(error)),
+                );
             } else {
-                modeler
-                    .saveXML()
-                    .then((xml: any) => processRepository.update(_id, new Process({ ...data, name, source: xml.xml })));
+                modeler.saveXML().then((xml: any) =>
+                    processRepository
+                        .update(_id, new Process({ ...data, name, source: xml.xml }))
+                        .then((data) => toast.success('Proceso actualizado'))
+                        .catch((error) => error),
+                );
             }
         }
     };
