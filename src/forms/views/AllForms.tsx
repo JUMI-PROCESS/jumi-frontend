@@ -7,11 +7,12 @@ import useTenantForms from '../hooks/useTenantForms';
 import ListForms from '../components/ListForms';
 import { ParamsType } from '../utilities/TypeForm';
 import { FormSocket } from '../ports/FormSocket';
+import { EntityRepository } from '../../output.ports/EntityRepository';
 
 type Props = {};
 
 export default function AllForms({}: Props) {
-    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
+    const formRepository: EntityRepository = useContext(RepositoryContext)['form'];
 
     const { pathname } = useLocation();
 

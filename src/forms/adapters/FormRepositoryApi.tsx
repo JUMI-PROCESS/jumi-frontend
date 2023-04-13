@@ -23,6 +23,11 @@ export class FormRepositoryApi implements EntityRepository<IForm> {
         return data;
     }
 
+    async complete(_id: string, form: IForm): Promise<IForm | null> {
+        const { data, status } = await this.URL.patch(`complete/?_id=${_id}`, {form: form});
+        return data;
+    }
+
     async getById(_id: string): Promise<IForm | null> {
         return this.URL.get(`${_id}`);
     }

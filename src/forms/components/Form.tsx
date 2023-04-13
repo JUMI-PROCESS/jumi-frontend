@@ -214,7 +214,6 @@ function Form({
     };
 
     const onSave = async () => {
-        console.log(mode);
         let dataSave = fields.filter((item) => item._id && !item._id.includes('blank'));
         dataSave = dataSave.map((item) => {
             if (item._id && item._id.includes('new')) {
@@ -234,7 +233,7 @@ function Form({
             navigate('/formularios/todos');
         }
         if (mode == VIEWVER) {
-            await formRepository.update(
+            await formRepository.complete(
                 data._id || '',
                 new IForm({ ...data, status: StatusForm.received, fields: dataSave })
             );

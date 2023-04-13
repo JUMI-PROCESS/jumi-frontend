@@ -12,6 +12,7 @@ import dataTemplate from '/public/templateFields';
 
 import { MODELER, PANEL_MENU, VIEWVER, SAVE, UPDATE } from '../utilities/TypeForm';
 import { Form as IForm } from '../domain/Form';
+import { EntityRepository } from '../../output.ports/EntityRepository';
 
 type Props = {
     form: IForm | null;
@@ -19,7 +20,7 @@ type Props = {
 
 function Filler({ form }: Props) {
     const userContext: Record<string, any> = useContext(UserContext);
-    const formRepository: FormRepository = useContext(RepositoryContext)['form'];
+    const formRepository: EntityRepository = useContext(RepositoryContext)['form'];
 
     const _id = useParams()['_id'] || '';
 
@@ -40,7 +41,7 @@ function Filler({ form }: Props) {
         if (!form) {
             setMode(VIEWVER);
             const fetchData = async () => {
-                const res = await formRepository.getFormById(_id);
+                const res = await formRepository.getById(_id);
                 const { fields: fieldsAux, ...dataAux } = res.data;
                 setData(dataAux);
                 setFields(fieldsAux);

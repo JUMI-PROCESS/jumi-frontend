@@ -8,7 +8,7 @@ export enum StatusForm {
 enum PriorityForm {
     hight = 'hight',
     mediuim = 'mediuim',
-    low = 'mediuim',
+    low = 'low',
 }
 
 enum TypeField {
