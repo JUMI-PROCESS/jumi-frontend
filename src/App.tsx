@@ -16,6 +16,7 @@ import {
     FormTemplateRepositoryContextDefault as formTemplate,
     InstanceRepositoryApiContextDefault as instance,
     ProcessRepositoryContextDefault as process,
+    UserRepositoryApiContextDefault as user_,
     RepositoryContext,
 } from './contexts/RepositoryContext';
 import { UserContext } from './contexts/UserContext';
@@ -67,7 +68,7 @@ function App() {
     return (
         <BrowserRouter>
             <UserContext.Provider value={user}>
-                <RepositoryContext.Provider value={{ form, formTemplate, process, deployment, instance, definition }}>
+                <RepositoryContext.Provider value={{ form, formTemplate, process, deployment, instance, definition, user: user_ }}>
                     <SocketContext.Provider value={{ form: SocketContextDefault }}>
                         <ToastContainer
                             position="top-right"

@@ -12,6 +12,7 @@ import { MODELER, PANEL_MENU, ParamsType, SAVE, UPDATE, VIEWVER } from '../utili
 import { getRandomId } from '../utilities/Utilities';
 import Field from './Field';
 import './Form.css';
+import { IUser, User } from '../../users/domain/user';
 
 interface IConfig {
     [key: string]: string | number | boolean;
@@ -66,6 +67,7 @@ function Form({
     const formRepository: EntityRepository<IForm> = useContext(RepositoryContext)['form'];
     const formTemplateRepository: EntityRepository<IFormTemplate> = useContext(RepositoryContext)['formTemplate'];
     const definitionRepository: EntityRepository<IDefinition> = useContext(RepositoryContext)['definition'];
+    const userRepository: EntityRepository<IUser> = useContext(RepositoryContext)['user'];
 
     const navigate = useNavigate();
     const { width: width_ } = useDimention();
@@ -76,11 +78,15 @@ function Form({
     ];
 
     const [definitions, setDefinitions] = useState<Array<Definition>>([]);
+    const [users, setUsers] = useState<Array<User>>([]);
+
 
     useEffect(() => {
         const fetchData = async () => {
             const definitions = await definitionRepository.getBy('', 0, '', [], '', 100);
             setDefinitions(definitions.data);
+            const users = await userRepository.getBy('', 0, '', [], '', 100);
+            setUsers(users.data);
         };
         if (type == MODELER) {
             setFields(fillSpace(data, fields));
@@ -261,13 +267,24 @@ function Form({
     };
 
     const onSelect = (e) => {
+        const name = e.target.name;
         const key = e.target.value;
+        const options = e.target.options;
         const tenant = user['user_metadata']['tenant'];
-        setData({
-            ...data,
-            startProcess: e.target.value,
-            callbackProcess: `process-definition/key/${e.target.value}/tenant-id/${tenant}/start`,
-        });
+        if(name == 'startProcess'){
+            setData({
+                ...data,
+                startProcess: e.target.value,
+                callbackProcess: `process-definition/key/${e.target.value}/tenant-id/${tenant}/start`,
+            });
+        }
+        if(name == 'availableUsers'){
+            console.log(options)
+            setData({
+                ...data,
+                availableUsers: Array.from(e.target.selectedOptions, option => option.value)
+            });
+        }
     };
 
     const getOptions = () => {
@@ -286,6 +303,16 @@ function Form({
                                 {definitions.map((item) => (
                                     <option key={item.key} value={item.key}>
                                         {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <select className="px-5" name="availableUsers" id="" value={data.availableUsers} onChange={onSelect} multiple>
+                                <option key="none" value="">
+                                    --- seleccione un usuario ---
+                                </option>
+                                {users.map((item) => (
+                                    <option key={item.user_id} value={item.user_id} selected={data.availableUsers.find((item_) => item_==item)}>
+                                        {item.nickname}
                                     </option>
                                 ))}
                             </select>

@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             authorizationParams={{
                 redirect_uri: import.meta.env.VITE_REDIRECT_JUMI,
                 audience: 'https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/',
-                scope: 'profile read:current_user read:users read:user_idp_tokens',
+                scope: 'profile read:current_user',
             }}
         >
             <App />
