@@ -1,8 +1,10 @@
+// @ts-ignore
 import ElementTemplateChooserModule from '@bpmn-io/element-template-chooser';
 import '@bpmn-io/element-template-chooser/dist/element-template-chooser.css';
 import axios from 'axios';
 import 'bpmn-js-properties-panel/dist/assets/element-templates.css';
 import 'bpmn-js-properties-panel/dist/assets/properties-panel.css';
+// @ts-ignore
 import TokenSimulationModule from 'bpmn-js-token-simulation';
 import 'bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
@@ -10,14 +12,17 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import 'bpmn-js/dist/assets/diagram-js.css';
+// @ts-ignore
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import CamundaCustomModdle from 'camunda-bpmn-moddle/resources/camunda.json';
+// @ts-ignore
 import minimapModule from 'diagram-js-minimap';
 import 'diagram-js-minimap/assets/diagram-js-minimap.css';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+// @ts-ignore
 import {
     BpmnPropertiesPanelModule,
     BpmnPropertiesProviderModule,
@@ -25,11 +30,11 @@ import {
     ElementTemplatesPropertiesProviderModule,
 } from '../../../lib/bpmn-panel/dist/index.esm';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
-import { UserContext } from '../../contexts/UserContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
-import { IProcess, Process } from '../domain/Process';
+import { Deployment, IDefinition, IDeployment, IProcess, Process } from '../domain/Process';
 import { MODELER, PANEL_MENU, SAVE, UPDATE, VIEWVER } from '../utilities/TypeProcess';
 import './Modeler.css';
+// @ts-ignore
 import templates from '/public/template.json';
 
 type Props = {
@@ -37,39 +42,31 @@ type Props = {
 };
 
 export default function Modeler({ process }: Props) {
-    const userContext: Record<string, any> = useContext(UserContext);
     const processRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['process'];
-    const deploymentRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['deployment'];
-    const definitionRepository: EntityRepository<IProcess> = useContext(RepositoryContext)['definition'];
+    const deploymentRepository: EntityRepository<IDeployment> = useContext(RepositoryContext)['deployment'];
+    const definitionRepository: EntityRepository<IDefinition> = useContext(RepositoryContext)['definition'];
 
     const _id = useParams()['_id'] || '';
     const [searchParams, setSearchParams] = useSearchParams();
-    const queryPath = searchParams.get('type') ?? 'procesos';
+    const queryPath = searchParams.get('type') || 'procesos';
 
-    const [container, setContainer] = useState(null);
-    const [modeler, setModeler] = useState(null);
+    const [container, setContainer] = useState<HTMLElement | null>(null);
+    const [modeler, setModeler] = useState<any>(null);
 
     const [data, setData] = useState<object | null>(null);
     const [mode, setMode] = useState(SAVE);
-
-    useEffect(() => {
-        processRepository.setConfig({ token: `${userContext['token']}` });
-        deploymentRepository.setConfig({ token: `${userContext['token']}` });
-        definitionRepository.setConfig({ token: `${userContext['token']}` });
-    }, []);
 
     useEffect(() => {
         if (modeler) {
             if (_id) {
                 setMode(UPDATE);
                 const fetchData = async () => {
-                    let res: Promise<any>;
+                    let res: any;
                     if (queryPath.includes('procesos')) res = await processRepository.getById(_id);
                     else if (queryPath.includes('desplegados')) res = await deploymentRepository.getById(_id);
                     else res = await definitionRepository.getById(_id);
-
                     setData(res.data);
-                    modeler.importXML(atob(res.data.source));
+                    modeler.importXML(res.data.binary ? atob(res.data.binary) : res.data.xml);
                     setModeler(modeler);
                 };
                 fetchData();
@@ -92,7 +89,6 @@ export default function Modeler({ process }: Props) {
         const fetchData = async () => {
             setContainer(document.getElementById('canvas'));
             if (container && !modeler) {
-                console.log('PASO');
                 let modeler = new BpmnModeler({
                     container,
                     additionalModules: [
@@ -128,19 +124,19 @@ export default function Modeler({ process }: Props) {
         if (modeler) {
             const rootElement = modeler.get('canvas').getRootElement();
             const { name } = rootElement['businessObject'];
-            if (mode == SAVE) {
+            if (mode == SAVE || queryPath == 'desplegados' || queryPath == 'definiciones') {
                 modeler.saveXML().then((xml: any) =>
                     processRepository
-                        .save(new Process({ name, source: xml.xml }))
+                        .save(new Process({ name, binary: xml.xml }))
                         .then((data) => toast.success('Proceso guardado'))
                         .catch((error) => toast.error(error)),
                 );
             } else {
                 modeler.saveXML().then((xml: any) =>
                     processRepository
-                        .update(_id, new Process({ ...data, name, source: xml.xml }))
+                        .update(_id, new Process({ ...data, name, binary: xml.xml }))
                         .then((data) => toast.success('Proceso actualizado'))
-                        .catch((error) => error),
+                        .catch((error) => toast.error(error)),
                 );
             }
         }
@@ -149,7 +145,7 @@ export default function Modeler({ process }: Props) {
     const onCreate = () => {
         if (modeler) {
             axios.get('/diagram.bpmn', { 'Content-Type': 'text; charset=utf-8' } as any).then((data) => {
-                setData(new Process({ source: data }));
+                setData(new Process({ binary: data }));
                 modeler.importXML(data.data);
                 setModeler(modeler);
             });
@@ -161,7 +157,9 @@ export default function Modeler({ process }: Props) {
             const rootElement = modeler.get('canvas').getRootElement();
             const { name } = rootElement['businessObject'];
             if (mode == SAVE || mode == UPDATE) {
-                modeler.saveXML().then((xml: any) => deploymentRepository.save(new Process({ name, source: xml.xml })));
+                modeler
+                    .saveXML()
+                    .then((xml: any) => deploymentRepository.save(new Process({ name, binary: xml.xml })));
             }
         }
     };

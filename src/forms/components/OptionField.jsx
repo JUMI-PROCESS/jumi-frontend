@@ -1,8 +1,7 @@
 import React from 'react';
-
 import Popup from 'reactjs-popup';
-
 import 'reactjs-popup/dist/index.css';
+
 import './OptionField.css';
 
 function OptionField({ buttonOpen, props, setProps }) {
@@ -19,15 +18,47 @@ function OptionField({ buttonOpen, props, setProps }) {
                     <h4 style={{ margin: '0' }}>Propiedades</h4>
                     <div style={{ padding: '0' }} className="field-input">
                         <span>Nombre</span>
-                        <input style={{ width: '90%' }} type="text" name="name" id="" value={props.name} onChange={onProps} />
+                        <input
+                            style={{ width: '90%' }}
+                            type="text"
+                            name="name"
+                            id=""
+                            value={props.name}
+                            onChange={onProps}
+                        />
                     </div>
                     <div style={{ padding: '0' }} className="field-input">
                         <span>Valor por defecto</span>
-                        <input style={{ width: '90%' }} type={props.type} name="value" id="" value={props.value} onChange={onProps} />
+                        <input
+                            style={{ width: '90%' }}
+                            type={props.type}
+                            name="value"
+                            id=""
+                            value={props.value}
+                            onChange={onProps}
+                        />
+                    </div>
+                    <div style={{ padding: '0' }} className="field-input">
+                        <span>Llave</span>
+                        <input
+                            style={{ width: '90%' }}
+                            type="text"
+                            name="key"
+                            id=""
+                            value={props.key}
+                            onChange={onProps}
+                        />
                     </div>
                     <div style={{ padding: '0' }} className="field-input">
                         <span>Tipo</span>
-                        <select style={{ width: '90%' }} type="text" name="type" id="" value={props.type} onChange={onProps}>
+                        <select
+                            style={{ width: '90%' }}
+                            type="text"
+                            name="type"
+                            id=""
+                            value={props.type}
+                            onChange={onProps}
+                        >
                             <option value="texto">Texto</option>
                             <option value="number">Número</option>
                             <option value="time">Tiempo</option>

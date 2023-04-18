@@ -4,9 +4,9 @@ import { useLocation } from 'react-router-dom';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import ListProcess from '../components/ListProcesses';
-import { IProcess as IInstance } from '../domain/Process';
+import { IInstance } from '../domain/Process';
 import useInstances from '../hooks/useInstances';
-        import { ParamsType } from '../utilities/TypeProcess';
+import { ParamsType } from '../utilities/TypeProcess';
 
 // import { FormSocket } from '../ports/FormSocket';
 
@@ -27,7 +27,7 @@ export default function AllInstances({}: Props) {
     });
     useEffect(() => {
         setPage(0);
-    }, [query]);
+    }, [query, pathname]);
 
     if (!data) {
         return <span>Loading...</span>;
@@ -35,7 +35,9 @@ export default function AllInstances({}: Props) {
 
     return (
         <ListProcess
-            data={data}
+            data={data.map((item) => {
+                return { ...item, name: item.definitionId.split(':')[0] };
+            })}
             query={query}
             setQuery={setQuery}
             page={page}

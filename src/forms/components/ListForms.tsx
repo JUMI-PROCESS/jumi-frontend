@@ -1,26 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { RepositoryContext } from '../../contexts/RepositoryContext';
+import React from 'react';
 
-import ItemForm from './ItemForm';
-
-import { Form } from '../domain/Form';
-
-import './ListForms.css';
-import { FormRepository } from '../ports/FormRepository';
-import SearchInput from '../../components/SearchInput';
 import Paginator from '../../components/Paginator';
+import SearchInput from '../../components/SearchInput';
+import { Form } from '../domain/Form';
+import ItemForm from './ItemForm';
+import './ListForms.css';
 
 type Props = {
-    data: Array<Form>
-    query: string,
-    setQuery: Function,
-    page: number,
-    setPage: Function,
-    size: number,
-    limit: number,
+    data: Array<Form>;
+    query: string;
+    setQuery: Function;
+    page: number;
+    setPage: Function;
+    size: number;
+    limit: number;
 };
 
-export default function ListForms({data, query, setQuery, page, setPage, size, limit}: Props) {
+export default function ListForms({ data, query, setQuery, page, setPage, size, limit }: Props) {
     return (
         <div className="d-grid backg-s2 p-10">
             <SearchInput query={query} setQuery={setQuery} />

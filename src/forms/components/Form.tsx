@@ -1,4 +1,4 @@
-import React, { MouseEvent, useContext, useEffect } from 'react';
+import React, { MouseEvent, useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -6,8 +6,8 @@ import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { UserContext } from '../../contexts/UserContext';
 import { useDimention } from '../../hooks/useDimention';
 import { EntityRepository } from '../../output.ports/EntityRepository';
-import { IField, Form as IForm, StatusForm } from '../domain/Form';
-import { FormRepository } from '../ports/FormRepository';
+import { Definition, IDefinition } from '../../process/domain/Process';
+import { FormTemplate, IField, Form as IForm, IFormTemplate, StatusForm } from '../domain/Form';
 import { MODELER, PANEL_MENU, ParamsType, SAVE, UPDATE, VIEWVER } from '../utilities/TypeForm';
 import { getRandomId } from '../utilities/Utilities';
 import Field from './Field';
@@ -62,23 +62,30 @@ function Form({
     heigth = 'auto',
     classes,
 }: Props) {
-    const userContext: Record<string, any> = useContext(UserContext);
+    const user: Record<string, any> = useContext(UserContext);
     const formRepository: EntityRepository<IForm> = useContext(RepositoryContext)['form'];
+    const formTemplateRepository: EntityRepository<IFormTemplate> = useContext(RepositoryContext)['formTemplate'];
+    const definitionRepository: EntityRepository<IDefinition> = useContext(RepositoryContext)['definition'];
 
     const navigate = useNavigate();
     const { width: width_ } = useDimention();
-
-    useEffect(() => {
-        formRepository.setConfig({ token: `${userContext['token']}` });
-    }, []);
 
     const { pathname } = useLocation();
     const actions = (ParamsType[pathname] || ParamsType['/formularios/tareas'] || ParamsType['/formularios/modelador'])[
         'actions'
     ];
 
+    const [definitions, setDefinitions] = useState<Array<Definition>>([]);
+
     useEffect(() => {
-        if (type == MODELER) setFields(fillSpace(data, fields));
+        const fetchData = async () => {
+            const definitions = await definitionRepository.getBy('', 0, '', [], '', 100);
+            setDefinitions(definitions.data);
+        };
+        if (type == MODELER) {
+            setFields(fillSpace(data, fields));
+            fetchData();
+        }
     }, [type, data]);
 
     const fillSpace = (dataTemplate?: IForm, fieldsTemplate?: Array<IField>) => {
@@ -217,34 +224,50 @@ function Form({
         dataSave = dataSave.map((item) => {
             if (item._id && item._id.includes('new')) {
                 const { _id, ...rest } = item;
-                return rest;
+                // NO ENVIAR ID SÍ LA BD LO PONE
+                return item;
             } else {
                 return item;
             }
         });
         if (mode == SAVE) {
             const { _id, ...rest } = data;
-            formRepository
-                .save(new IForm({ ...data, fields: dataSave }))
-                .then((data) => toast.success('Formulario guardado'))
+            formTemplateRepository
+                .save(new FormTemplate({ ...data, fields: dataSave }))
+                .then((data) => {
+                    toast.success('Formulario guardado');
+                    navigate('/formularios/todos');
+                })
                 .catch((error) => toast.error(error));
-
-            navigate('/formularios/todos');
         }
         if (mode == UPDATE) {
-            formRepository
-                .update(data._id || '', new IForm({ ...data, fields: dataSave }))
-                .then((data) => toast.success('Formulario actualizado'))
-                .catch((error) => toast.error(error));
-            navigate('/formularios/todos');
+            formTemplateRepository
+                .update(data._id || '', new FormTemplate({ ...data, fields: dataSave }))
+                .then((data) => {
+                    toast.success('Formulario actualizado');
+                    navigate('/formularios/todos');
+                })
+                .catch((error) => {console.log(error);toast.error(error)});
         }
         if (mode == VIEWVER) {
-            await formRepository
+            formRepository
                 .complete(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }))
-                .then((data) => toast.success('Formulario diligenciado'))
+                .then((data) => {
+                    toast.success('Formulario diligenciado');
+                    navigate('/formularios/tareas');
+                })
                 .catch((error) => toast.error(error));
-            navigate('/formularios/tareas');
         }
+    };
+
+    const onSelect = (e) => {
+        const key = e.target.value;
+        const tenant = user['user_metadata']['tenant'];
+        setData({
+            ...data,
+            startProcess: e.target.value,
+            callbackProcess: `process-definition/key/${e.target.value}/tenant-id/${tenant}/start`,
+        });
     };
 
     const getOptions = () => {
@@ -255,9 +278,21 @@ function Form({
                         RETORNAR
                     </button>
                     {type == MODELER ? (
-                        <button style={{ marginLeft: '2px' }} onClick={onSave}>
-                            GUARDAR
-                        </button>
+                        <>
+                            <select className="px-5" name="startProcess" id="" value={data.startProcess} onChange={onSelect}>
+                                <option key="none" value="">
+                                    --- seleccione un proceso ---
+                                </option>
+                                {definitions.map((item) => (
+                                    <option key={item.key} value={item.key}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button style={{ marginLeft: '2px' }} onClick={onSave}>
+                                GUARDAR
+                            </button>
+                        </>
                     ) : (
                         <button style={{ marginLeft: '2px' }} onClick={onSave}>
                             ENVIAR

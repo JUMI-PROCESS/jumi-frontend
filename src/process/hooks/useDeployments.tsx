@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 
 import { RepositoryContext } from '../../contexts/RepositoryContext';
-import { UserContext } from '../../contexts/UserContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { IProcess as IDeployment } from '../domain/Process';
 
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export default function UseDeployments({ query, page, paramsExtra, type }: Props) {
-    const userContext: Record<string, any> = useContext(UserContext);
     const instanceRepository: EntityRepository<IDeployment> = useContext(RepositoryContext)['deployment'];
     // const formSocket: FormSocket = useContext(SocketContext)['form'];
 
@@ -24,13 +22,9 @@ export default function UseDeployments({ query, page, paramsExtra, type }: Props
     const [size, setSize] = useState(0);
 
     useEffect(() => {
-        instanceRepository.setConfig({ token: `${userContext['token']}` });
-    }, []);
-
-    useEffect(() => {
         const fetchData = async () => {
             const res = await instanceRepository.getCounter(query, 'name', paramsExtra, type);
-            setSize(res.data.counter);
+            setSize(res.data);
         };
 
         fetchData();

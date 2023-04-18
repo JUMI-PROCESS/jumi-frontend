@@ -27,7 +27,7 @@ export default function AllDefinitions({}: Props) {
     });
     useEffect(() => {
         setPage(0);
-    }, [query]);
+    }, [query, pathname]);
 
     if (!data) {
         return <span>Loading...</span>;

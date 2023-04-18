@@ -11,19 +11,31 @@ export const ParamsType: Record<string, Record<string, string | Array<string> | 
     '/formularios/disponibles': {
         type: 'instanced',
         params: ['availableLabels', 'availableUsers'],
-        actions: { isDelete: false, isEdit: false, isInfo: true, isFill: false },
+        actions: { isDelete: false, isEdit: false, isInfo: true, isFill: false, isAssigned: true },
     },
     '/formularios/tareas': {
         type: 'instanced',
         params: ['assignedLabel', 'assignedUser'],
-        actions: { isDelete: false, isEdit: false, isInfo: true, isFill: true },
+        actions: { isDelete: false, isEdit: false, isInfo: true, isFill: true, isAssigned: false },
     },
     '/formularios/todos': {
         type: '',
         params: [],
-        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false },
+        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false, isAssigned: false },
     },
-    '/formularios/modelador': { type: '', params: [], actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false } },
-    '/formularios': { type: '', params: [], actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false } },
-    '/': { type: '', params: [], actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false } },
+    '/formularios/modelador': {
+        type: '',
+        params: [],
+        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false, isAssigned: false },
+    },
+    '/formularios': {
+        type: '',
+        params: [],
+        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false, isAssigned: false },
+    },
+    '/': {
+        type: '',
+        params: [],
+        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false, isAssigned: false },
+    },
 };

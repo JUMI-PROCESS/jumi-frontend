@@ -1,15 +1,13 @@
 import React from 'react';
 
-import ItemProcess from './ItemProcess';
-
-import { Process } from '../domain/Process';
-
-import './ListProcesses.css';
-import SearchInput from '../../components/SearchInput';
 import Paginator from '../../components/Paginator';
+import SearchInput from '../../components/SearchInput';
+import { Process } from '../domain/Process';
+import ItemProcess from './ItemProcess';
+import './ListProcesses.css';
 
 type Props = {
-    data: Array<Process>;
+    data: Array<Record<string, any>>;
     query: string;
     setQuery: Function;
     page: number;
@@ -25,7 +23,7 @@ export default function ListProcesses({ data, query, setQuery, page, setPage, si
             <SearchInput query={query} setQuery={setQuery} />
             <div className="list-forms">
                 {data.map((item, idx) => (
-                    <ItemProcess key={idx} _id={item._id} name={item.name} date={item.dateRecorded} type={type}/>
+                    <ItemProcess key={idx} _id={item.id || item._id} name={item.name} date={item.dateRecorded} type={type} />
                 ))}
             </div>
             <Paginator limit={limit} size={size} page={page} setPage={setPage} />

@@ -1,21 +1,17 @@
 import axios from 'axios';
+import { JumiBackApiRest } from '../../output.adapters/JumiBackApiRest';
 
 import { EntityRepository } from '../../output.ports/EntityRepository';
-import { IProcess, Process } from '../domain/Process';
+import { IInstance, Instance } from '../domain/Process';
 
-export class InstanceRepositoryApi implements EntityRepository<IProcess> {
+export class InstanceRepositoryApi implements EntityRepository<IInstance> {
     limit: number = 8;
 
-    private URL = axios.create({
-        baseURL: 'https://192.168.1.9:3000/api/',
-        timeout: 3000,
-    });
+    private URL = JumiBackApiRest.getInstance();
 
-    setConfig(config: Record<string, any>): void {
-        this.URL.defaults.headers.common['Authorization'] = `Bearer ${config['token']}`;
-    }
+    setConfig(config: Record<string, any>): void {}
 
-    async save(process: Process): Promise<boolean> {
+    async save(process: IInstance): Promise<boolean> {
         const blob = new Blob([process['source']], { type: 'application/xml' });
         const file = new File([blob], `${process['name']}.bpmn`, { type: 'application/xml' });
         var formData = new FormData();
@@ -23,10 +19,10 @@ export class InstanceRepositoryApi implements EntityRepository<IProcess> {
             formData.append(key, value);
         });
         formData.set('source', file);
-        return await this.URL.post(`instances/`, formData);
+        return await this.URL.api.getConecction().post(`instances/`, formData);
     }
 
-    async update(_id: string, process: Process): Promise<Process | null> {
+    async update(_id: string, process: IInstance): Promise<IInstance | null> {
         const blob = new Blob([process['source']], { type: 'application/xml' });
         const file = new File([blob], `${process['name']}.bpmn`, { type: 'application/xml' });
         var formData = new FormData();
@@ -34,11 +30,11 @@ export class InstanceRepositoryApi implements EntityRepository<IProcess> {
             formData.append(key, value);
         });
         formData.set('source', file);
-        return await this.URL.patch(`instances/?_id=${_id}`, formData);
+        return await this.URL.api.getConecction().patch(`instances/?_id=${_id}`, formData);
     }
 
-    async getById(_id: string): Promise<Process | null> {
-        return this.URL.get(`instances/${_id}`);
+    async getById(_id: string): Promise<IInstance | null> {
+        return this.URL.api.getConecction().get(`instances/${_id}`);
     }
 
     async getBy(
@@ -47,17 +43,21 @@ export class InstanceRepositoryApi implements EntityRepository<IProcess> {
         params: string,
         paramsExtra: string[] = [],
         type: string = '',
-    ): Promise<Process[]> {
+    ): Promise<IInstance[]> {
         const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
-        return this.URL.get(
+        return this.URL.api.getConecction().get(
             `instance/?query=${query}&page=${page}&limit=${this.limit}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`,
         );
     }
 
     async getCounter(query: string, params: string, paramsExtra: string[] = [], type: string = ''): Promise<number> {
         const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
-        return this.URL.get(
+        return this.URL.api.getConecction().get(
             `instance/count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`,
         );
+    }
+
+    complete(_id: string, entity: IInstance): Promise<any> {
+        throw new Error('Method not implemented.');
     }
 }

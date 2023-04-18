@@ -1,18 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
-import { RepositoryContext } from '../../contexts/RepositoryContext';
-
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { FormRepository } from '../ports/FormRepository';
-
-import Form from '../components/Form';
-
-import dataTemplate from '/public/templateFields';
-
-import { MODELER, PANEL_MENU, VIEWVER, SAVE, UPDATE } from '../utilities/TypeForm';
-import { Form as IForm } from '../domain/Form';
+import { RepositoryContext } from '../../contexts/RepositoryContext';
+import { UserContext } from '../../contexts/UserContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
+import Form from '../components/Form';
+import { Form as IForm } from '../domain/Form';
+import { MODELER, PANEL_MENU, SAVE, UPDATE, VIEWVER } from '../utilities/TypeForm';
 
 type Props = {
     form: IForm | null;

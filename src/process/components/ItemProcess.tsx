@@ -29,7 +29,7 @@ export default function ItemProcess({ _id, name, date, type }: Props) {
         <div className="target py-20" onClick={onNavigate}>
             <div className="target-info">
                 <span className="h3">{name}</span>
-                <span className="h4-sub">{moment(date).format('dd DD MMM YYYY HH:mm:ss')}</span>
+                <span className="h4-sub">{moment(date).format('ddd DD MMM YYYY HH:mm:ss')}</span>
             </div>
             <div className="target-options">
                 {actions['isDelete'] ? <div className="icon">&#9746;</div> : <></>}

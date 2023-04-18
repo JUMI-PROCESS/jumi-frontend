@@ -1,46 +1,42 @@
 import axios, { AxiosResponse } from 'axios';
 
+import { JumiBackApiRest } from '../../output.adapters/JumiBackApiRest';
 import { EntityRepository } from '../../output.ports/EntityRepository';
-import { IProcess as IDeployment } from '../domain/Process';
+import { IDeployment } from '../domain/Process';
 
 export class DeploymentRepositoryApi
     implements EntityRepository<IDeployment, AxiosResponse<IDeployment | IDeployment[] | Number>>
 {
     limit: number = 8;
 
-    private URL = axios.create({
-        baseURL: 'https://192.168.1.9:3000/api/',
-        timeout: 3000,
-    });
+    private URL = JumiBackApiRest.getInstance();
 
-    setConfig(config: Record<string, any>): void {
-        this.URL.defaults.headers.common['Authorization'] = `Bearer ${config['token']}`;
-    }
+    setConfig(config: Record<string, any>): void {}
 
     async save(deployment: IDeployment): Promise<AxiosResponse<IDeployment>> {
-        const blob = new Blob([deployment['source']], { type: 'application/xml' });
+        const blob = new Blob([deployment['binary']], { type: 'application/xml' });
         const file = new File([blob], `${deployment['name']}.bpmn`, { type: 'application/xml' });
         var formData = new FormData();
         Object.entries(deployment).forEach(([key, value]) => {
             formData.append(key, value);
         });
         formData.set('source', file);
-        return await this.URL.post(`deployment/`, formData);
+        return await this.URL.api.getConecction().post(`deployment/`, formData);
     }
 
     async update(_id: string, deployment: IDeployment): Promise<AxiosResponse<IDeployment>> {
-        const blob = new Blob([deployment['source']], { type: 'application/xml' });
+        const blob = new Blob([deployment['binary']], { type: 'application/xml' });
         const file = new File([blob], `${deployment['name']}.bpmn`, { type: 'application/xml' });
         var formData = new FormData();
         Object.entries(deployment).forEach(([key, value]) => {
             formData.append(key, value);
         });
         formData.set('source', file);
-        return await this.URL.patch(`deployment/?_id=${_id}`, formData);
+        return await this.URL.api.getConecction().patch(`deployment/?_id=${_id}`, formData);
     }
 
     async getById(_id: string): Promise<AxiosResponse<IDeployment>> {
-        return await this.URL.get(`${_id}`);
+        return await this.URL.api.getConecction().get(`deployment/${_id}`);
     }
 
     async getBy(
@@ -51,9 +47,11 @@ export class DeploymentRepositoryApi
         type: string = '',
     ): Promise<AxiosResponse<IDeployment[]>> {
         const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
-        return await this.URL.get(
-            `deployment/?query=${query}&page=${page}&limit=${this.limit}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`,
-        );
+        return await this.URL.api
+            .getConecction()
+            .get(
+                `deployment/?query=${query}&page=${page}&limit=${this.limit}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`,
+            );
     }
 
     async getCounter(
@@ -63,8 +61,12 @@ export class DeploymentRepositoryApi
         type: string = '',
     ): Promise<AxiosResponse<Number>> {
         const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
-        return await this.URL.get(
-            `deployment/count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`,
-        );
+        return await this.URL.api
+            .getConecction()
+            .get(`deployment/count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`);
+    }
+
+    complete(_id: string, entity: IDeployment): Promise<AxiosResponse<Number | IDeployment | IDeployment[], any>> {
+        throw new Error('Method not implemented.');
     }
 }

@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
-import UseTenantForms from '../../forms/hooks/useTenantForms';
 import useTenantForms from '../../forms/hooks/useTenantForms';
 import { UserContext } from '../../contexts/UserContext';
+import UseTenantFormsTemplates from '../../forms/hooks/useTenantFormsTemplates';
 
 type Props = {};
 
@@ -21,8 +21,7 @@ export default function ProcessLayout({}: Props) {
 
     const location = useLocation().pathname;
 
-    const forms = useTenantForms({ query: '', page: 0, paramsExtra: [], type: '' });
-    console.log(userContext);
+    const forms = UseTenantFormsTemplates({ query: '', page: 0, paramsExtra: [], type: '', limit: 100 });
     localStorage.setItem(
         'forms',
         JSON.stringify(

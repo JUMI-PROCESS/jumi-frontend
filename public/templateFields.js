@@ -3,6 +3,7 @@ export default {
         {
             _id: 'template1',
             name: 'Campo de texto',
+            key: '',
             type: 'text',
             color: '',
             background: '',  
@@ -20,6 +21,7 @@ export default {
         {
             _id: 'template2',
             name: 'Campo de números',
+            key: '',
             type: 'number',
             color: '',
             background: '',  
@@ -37,6 +39,7 @@ export default {
         {
             _id: 'template3',
             name: 'Campo de fecha',
+            key: '',
             type: 'date',
             color: '',
             background: '',  
@@ -53,6 +56,7 @@ export default {
         },{
             _id: 'template4',
             name: 'Campo de tiempo',
+            key: '',
             type: 'time',
             color: '',
             background: '',  
@@ -69,6 +73,7 @@ export default {
         },{
             _id: 'template5',
             name: 'Seleccion',
+            key: '',
             type: 'select',
             color: '',
             background: '',  
@@ -85,6 +90,7 @@ export default {
         },{
             _id: 'template6',
             name: 'Comentario',
+            key: '',
             type: 'comment',
             color: '',
             background: '',  

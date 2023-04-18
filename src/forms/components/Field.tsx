@@ -1,14 +1,11 @@
 import React from 'react';
 
-import OptionField from './OptionField';
-
-import './Field.css';
-
 import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
+import './Field.css';
+import OptionField from './OptionField';
 
 function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize, onDelete, onChange, isDrag }) {
     const onDragStart = (e, item) => {
-        console.log(e);
         if (type == MODELER) onStart(e, item);
         else if (type == PANEL_MENU) {
             onStart(e, item, {
@@ -18,7 +15,6 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
     };
 
     const onDragEnter = (e, item) => {
-        console.log(e);
         if (type == MODELER) onEnter(e, item);
         else if (type == PANEL_MENU) {
             onEnter(e, item, {
@@ -28,7 +24,6 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
     };
 
     const onDragDrop = (e, item) => {
-        console.log(e)
         if (type == MODELER) onDrop(e, item);
         else if (type == PANEL_MENU) {
             onDrop(e, item, {

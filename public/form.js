@@ -13,6 +13,7 @@ export default [
             {
                 _id: 'new231231wekfk2331',
                 name: 'Campo de texto',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -32,6 +33,7 @@ export default [
             {
                 _id: '231231wekfkw331',
                 name: 'Campo de números',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -51,6 +53,7 @@ export default [
             {
                 _id: '231231aekfk2331',
                 name: 'Campo de fecha',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -70,6 +73,7 @@ export default [
             {
                 _id: '239231aekfk2331',
                 name: 'Campo de tiempo',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -102,6 +106,7 @@ export default [
             {
                 _id: '231231wekfk2331e',
                 name: 'Campo de texto',
+                key: '',
                 value: '',
                 value: {
                     value: '',
@@ -122,6 +127,7 @@ export default [
             {
                 _id: '231231wekfkw3e31',
                 name: 'Campo de números',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -141,6 +147,7 @@ export default [
             {
                 _id: '231231aekfk233e1',
                 name: 'Campo de fecha',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -160,6 +167,7 @@ export default [
             {
                 _id: '239231aekfk23e31',
                 name: 'Campo de tiempo',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -192,6 +200,7 @@ export default [
             {
                 _id: '231231weksfk2331',
                 name: 'Campo de texto',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -211,6 +220,7 @@ export default [
             {
                 _id: '231231weksfkw331',
                 name: 'Campo de números',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -230,6 +240,7 @@ export default [
             {
                 _id: '231231aewkfk2331',
                 name: 'Campo de fecha',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -249,6 +260,7 @@ export default [
             {
                 _id: '239231aekefk2331',
                 name: 'Campo de tiempo',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -281,6 +293,7 @@ export default [
             {
                 _id: '231231wefkfk2331',
                 name: 'Campo de texto',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -300,6 +313,7 @@ export default [
             {
                 _id: '231231wfekfkw331',
                 name: 'Campo de números',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -319,6 +333,7 @@ export default [
             {
                 _id: '231231aefkfk2331',
                 name: 'Campo de fecha',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -338,6 +353,7 @@ export default [
             {
                 _id: '239231aefkfk2331',
                 name: 'Campo de tiempo',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -370,6 +386,7 @@ export default [
             {
                 _id: '231231wekfk2331',
                 name: 'Campo de texto',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -389,6 +406,7 @@ export default [
             {
                 _id: '231231wekfkw331',
                 name: 'Campo de números',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -408,6 +426,7 @@ export default [
             {
                 _id: '231231aekfkds2331',
                 name: 'Campo de fecha',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],
@@ -427,6 +446,7 @@ export default [
             {
                 _id: '239231aekfk2st331',
                 name: 'Campo de tiempo',
+                key: '',
                 value: {
                     value: '',
                     multivalue: [],

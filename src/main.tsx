@@ -6,18 +6,18 @@ import App from './App';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <Auth0Provider
-      domain="dev-rk8v8gk7wiwt6rgi.us.auth0.com"
-      clientId="Gql0qF18UhhOxw9DvvRYKpeVzmG0B3tj"
-      cacheLocation={'localstorage' as const}
-      authorizationParams={{
-        redirect_uri: 'https://192.168.1.11:5173/formularios/todos',
-        audience: 'https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/',
-        scope: 'profile read:current_user',
-      }}
-    >
-      <App />
-    </Auth0Provider>
-  </React.StrictMode>,
+    <React.StrictMode>
+        <Auth0Provider
+            domain="dev-rk8v8gk7wiwt6rgi.us.auth0.com"
+            clientId="Gql0qF18UhhOxw9DvvRYKpeVzmG0B3tj"
+            cacheLocation={'localstorage' as const}
+            authorizationParams={{
+                redirect_uri: import.meta.env.VITE_REDIRECT_JUMI,
+                audience: 'https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/',
+                scope: 'profile read:current_user read:users read:user_idp_tokens',
+            }}
+        >
+            <App />
+        </Auth0Provider>
+    </React.StrictMode>,
 );

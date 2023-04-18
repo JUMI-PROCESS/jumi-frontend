@@ -28,7 +28,7 @@ export default function AllForms({}: Props) {
 
     useEffect(() => {
         setPage(0);
-    }, [query]);
+    }, [query, pathname]);
 
     if (!data) {
         return <span>Loading...</span>;

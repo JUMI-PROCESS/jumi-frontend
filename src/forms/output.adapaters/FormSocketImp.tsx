@@ -4,7 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import { FormSocket } from '../ports/FormSocket';
 
 export class FormSocketImp implements FormSocket {
-    URL = io('https://192.168.1.9:3000', { transports: ['websocket'] });
+    URL = io(import.meta.env.VITE_SERVER_JUMI, { transports: ['websocket'] });
 
     setConfig(config: Record<string, any>): void {}
     onForm(onSignal: Function): Socket<DefaultEventsMap, DefaultEventsMap> {

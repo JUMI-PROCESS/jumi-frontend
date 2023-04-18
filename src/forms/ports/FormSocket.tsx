@@ -1,4 +1,3 @@
-import { Form } from '../domain/Form';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 import { Socket } from "socket.io-client/build/esm";
 
