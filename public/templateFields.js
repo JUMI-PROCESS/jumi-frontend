@@ -2,7 +2,7 @@ export default {
     fields: [
         {
             _id: 'template1',
-            name: 'Campo de texto',
+            name: 'Texto',
             key: '',
             type: 'text',
             color: '',
@@ -11,6 +11,7 @@ export default {
             isRequired: true,
             constraint: '',
             value: '',
+            isEditable: true,
             gridLocation: {
                 row: 1,
                 column: 1,
@@ -20,7 +21,7 @@ export default {
         },
         {
             _id: 'template2',
-            name: 'Campo de números',
+            name: 'Númerico',
             key: '',
             type: 'number',
             color: '',
@@ -29,6 +30,7 @@ export default {
             isRequired: true,
             constraint: '',
             value: '',
+            isEditable: true,
             gridLocation: {
                 row: 2,
                 column: 1,
@@ -38,7 +40,7 @@ export default {
         },
         {
             _id: 'template3',
-            name: 'Campo de fecha',
+            name: 'Fecha',
             key: '',
             type: 'date',
             color: '',
@@ -47,6 +49,7 @@ export default {
             isRequired: true,
             constraint: '',
             value: '',
+            isEditable: true,
             gridLocation: {
                 row: 3,
                 column: 1,
@@ -55,7 +58,7 @@ export default {
             },
         },{
             _id: 'template4',
-            name: 'Campo de tiempo',
+            name: 'Tiempo',
             key: '',
             type: 'time',
             color: '',
@@ -64,6 +67,7 @@ export default {
             isRequired: true,
             constraint: '',
             value: '',
+            isEditable: true,
             gridLocation: {
                 row: 4,
                 column: 1,
@@ -72,7 +76,7 @@ export default {
             },
         },{
             _id: 'template5',
-            name: 'Seleccion',
+            name: 'Selección',
             key: '',
             type: 'select',
             color: '',
@@ -81,6 +85,7 @@ export default {
             isRequired: true,
             constraint: '',
             value: '',
+            isEditable: true,
             gridLocation: {
                 row: 5,
                 column: 1,
@@ -98,10 +103,47 @@ export default {
             isRequired: true,
             constraint: '',
             value: '',
+            isEditable: true,
             gridLocation: {
                 row: 6,
                 column: 1,
                 height: 7,
+                width: 2,
+            },
+        },{
+            _id: 'template7',
+            name: 'Area',
+            key: '',
+            type: 'area',
+            color: '',
+            background: '',  
+            options: [],
+            isRequired: true,
+            constraint: '',
+            value: '',
+            isEditable: true,
+            gridLocation: {
+                row: 7,
+                column: 1,
+                height: 8,
+                width: 2,
+            },
+        },{
+            _id: 'template8',
+            name: 'Validación',
+            key: '',
+            type: 'checkbox',
+            color: '',
+            background: '',  
+            options: [],
+            isRequired: true,
+            constraint: '',
+            value: false,
+            isEditable: true,
+            gridLocation: {
+                row: 8,
+                column: 1,
+                height: 9,
                 width: 2,
             },
         }

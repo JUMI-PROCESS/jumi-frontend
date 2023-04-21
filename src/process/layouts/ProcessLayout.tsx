@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
-import useTenantForms from '../../forms/hooks/useTenantForms';
 import { UserContext } from '../../contexts/UserContext';
-import UseTenantFormsTemplates from '../../forms/hooks/useTenantFormsTemplates';
+import useTenantFormsTemplates from '../../forms/hooks/useTenantFormsTemplates';
+import useTenantUsers from '../../users/hooks/useTenantUsers';
 
 type Props = {};
 
@@ -16,12 +16,12 @@ enum OPTIONS {
 }
 
 export default function ProcessLayout({}: Props) {
-
     const userContext: Record<string, any> = useContext(UserContext);
 
     const location = useLocation().pathname;
 
-    const forms = UseTenantFormsTemplates({ query: '', page: 0, paramsExtra: [], type: '', limit: 100 });
+    const users = useTenantUsers({ query: '', page: 0, paramsExtra: [], type: '', limit: 100 });
+    const forms = useTenantFormsTemplates({ query: '', page: 0, paramsExtra: [], type: '', limit: 100 });
     localStorage.setItem(
         'forms',
         JSON.stringify(
@@ -30,9 +30,14 @@ export default function ProcessLayout({}: Props) {
             }),
         ),
     );
-    localStorage.setItem('users', JSON.stringify(
-        [{_id: userContext.user_id, nickname: userContext.nickname}],
-    ),);
+    localStorage.setItem(
+        'users',
+        JSON.stringify(
+            users.data.map((item) => {
+                return { _id: item.user_id, nickname: item.nickname };
+            }),
+        ),
+    );
     localStorage.setItem('labels', JSON.stringify([]));
 
     return (

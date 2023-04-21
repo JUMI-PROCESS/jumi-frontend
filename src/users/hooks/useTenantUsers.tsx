@@ -1,10 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { useContext, useEffect, useState } from 'react';
+
 import { RepositoryContext } from '../../contexts/RepositoryContext';
-import { Form, IForm } from '../domain/Form';
-import { SocketContext } from '../../contexts/FormSocketContext';
-import { FormSocket } from '../ports/FormSocket';
 import { EntityRepository } from '../../output.ports/EntityRepository';
+import { IUser } from '../domain/user';
 
 type Props = {
     query: string;
@@ -15,15 +13,14 @@ type Props = {
 };
 
 export default function useTenantUsers({ query, page, paramsExtra, type, limit }: Props) {
-    const formRepository: EntityRepository<IForm> = useContext(RepositoryContext)['form'];
-    const formSocket: FormSocket = useContext(SocketContext)['form'];
+    const userRepository: EntityRepository<IUser> = useContext(RepositoryContext)['user'];
 
-    const [data, setData] = useState<Array<IForm>>([]);
+    const [data, setData] = useState<Array<IUser>>([]);
     const [size, setSize] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await formRepository.getCounter(query, 'name', paramsExtra, type);
+            const res = await userRepository.getCounter(query, 'name', paramsExtra, type);
             setSize(res.data.counter);
         };
 
@@ -32,27 +29,12 @@ export default function useTenantUsers({ query, page, paramsExtra, type, limit }
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await formRepository.getBy(query, page, 'name', paramsExtra, type, limit);
+            const res = await userRepository.getBy(query, page, 'name', paramsExtra, type, limit);
             setData(res.data);
         };
 
         fetchData();
     }, [query, page, JSON.stringify(paramsExtra)]);
-
-    useEffect(() => {
-        const fetchData = async (data_: IForm) => {
-            const res = await formRepository.getBy(query, page, 'name', paramsExtra, type, limit);
-            setData(res.data);
-            setSize((size) => size + 1);
-
-            new Notification('JUMI', { body: 'Se agrego un nuevo formulario' });
-        };
-        formSocket.onForm(fetchData);
-
-        return () => {
-            formSocket.URL.off('signal', fetchData);
-        };
-    }, [query, page, JSON.stringify(paramsExtra), type]);
 
     return { data, size };
 }

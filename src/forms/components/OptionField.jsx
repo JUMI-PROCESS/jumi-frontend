@@ -6,8 +6,14 @@ import './OptionField.css';
 
 function OptionField({ buttonOpen, props, setProps }) {
     const onProps = (e) => {
-        if (e.target.name == 'value') props.value = e.target.value;
-        else props[e.target.name] = e.target.value;
+        console.log(e.target);
+        if (e.target.name == 'value') {
+            if (e.target.type == 'checkbox') props.value = e.target.checked;
+            else props.value = e.target.value;
+        } else {
+            if (e.target.type == 'checkbox') props[e.target.name] = e.target.checked;
+            else props[e.target.name] = e.target.value;
+        }
         setProps(props);
     };
 
@@ -34,6 +40,7 @@ function OptionField({ buttonOpen, props, setProps }) {
                             type={props.type}
                             name="value"
                             id=""
+                            checked={props.value}
                             value={props.value}
                             onChange={onProps}
                         />
@@ -50,6 +57,18 @@ function OptionField({ buttonOpen, props, setProps }) {
                         />
                     </div>
                     <div style={{ padding: '0' }} className="field-input">
+                        <span>¿Editable?</span>
+                        <input
+                            style={{ width: '90%' }}
+                            type="checkbox"
+                            name="isEditable"
+                            id=""
+                            checked={props.isEditable}
+                            value={props.isEditable}
+                            onChange={onProps}
+                        />
+                    </div>
+                    <div style={{ padding: '0' }} className="field-input">
                         <span>Tipo</span>
                         <select
                             style={{ width: '90%' }}
@@ -60,10 +79,13 @@ function OptionField({ buttonOpen, props, setProps }) {
                             onChange={onProps}
                         >
                             <option value="texto">Texto</option>
-                            <option value="number">Número</option>
+                            <option value="number">Númerico</option>
                             <option value="time">Tiempo</option>
                             <option value="date">Fecha</option>
-                            <option value="select">Seleccion</option>
+                            <option value="select">Selección</option>
+                            <option value="comment">Comentario</option>
+                            <option value="area">Area</option>
+                            <option value="checkbox">Validación</option>
                         </select>
                     </div>
                 </div>

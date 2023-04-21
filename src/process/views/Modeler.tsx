@@ -144,7 +144,7 @@ export default function Modeler({ process }: Props) {
 
     const onCreate = () => {
         if (modeler) {
-            axios.get('/diagram.bpmn', { 'Content-Type': 'text; charset=utf-8' } as any).then((data) => {
+            axios.get('/public/diagram.bpmn', { 'Content-Type': 'text; charset=utf-8' } as any).then((data) => {
                 setData(new Process({ binary: data }));
                 modeler.importXML(data.data);
                 setModeler(modeler);

@@ -1,3 +1,7 @@
+.required {
+    color: red;
+}
+
 .no-point {
     align-items: center;
     position: relative;
@@ -102,6 +106,7 @@
 .field-input {
     display: grid;
     padding: 0 10px;
+    width: 100%;
 }
 
 .field-name-collapse {
@@ -112,4 +117,8 @@
 
 .on-drag-enter {
     background-color: rgba(131, 128, 128, 0.356);
+}
+
+textarea:disabled {
+    pointer-events: visible;
 }

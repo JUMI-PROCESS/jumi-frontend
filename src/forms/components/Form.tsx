@@ -7,12 +7,12 @@ import { UserContext } from '../../contexts/UserContext';
 import { useDimention } from '../../hooks/useDimention';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { Definition, IDefinition } from '../../process/domain/Process';
+import { IUser, User } from '../../users/domain/user';
 import { FormTemplate, IField, Form as IForm, IFormTemplate, StatusForm } from '../domain/Form';
 import { MODELER, PANEL_MENU, ParamsType, SAVE, UPDATE, VIEWVER } from '../utilities/TypeForm';
 import { getRandomId } from '../utilities/Utilities';
 import Field from './Field';
 import './Form.css';
-import { IUser, User } from '../../users/domain/user';
 
 interface IConfig {
     [key: string]: string | number | boolean;
@@ -80,7 +80,6 @@ function Form({
     const [definitions, setDefinitions] = useState<Array<Definition>>([]);
     const [users, setUsers] = useState<Array<User>>([]);
 
-
     useEffect(() => {
         const fetchData = async () => {
             const definitions = await definitionRepository.getBy('', 0, '', [], '', 100);
@@ -89,10 +88,15 @@ function Form({
             setUsers(users.data);
         };
         if (type == MODELER) {
-            setFields(fillSpace(data, fields));
             fetchData();
         }
-    }, [type, data]);
+    }, []);
+
+    useEffect(() => {
+        if (type == MODELER) {
+            setFields(fillSpace(data, fields));
+        }
+    }, [type, JSON.stringify(data)]);
 
     const fillSpace = (dataTemplate?: IForm, fieldsTemplate?: Array<IField>) => {
         let fieldsAux: Array<Record<string, string | number | object> | IField> = [];
@@ -225,7 +229,8 @@ function Form({
         setFields(fillSpace(dataAux, fields));
     };
 
-    const onSave = async () => {
+    const onSave = async (e) => {
+        e.preventDefault();
         let dataSave = fields.filter((item) => item._id && !item._id.includes('blank'));
         dataSave = dataSave.map((item) => {
             if (item._id && item._id.includes('new')) {
@@ -253,7 +258,10 @@ function Form({
                     toast.success('Formulario actualizado');
                     navigate('/formularios/todos');
                 })
-                .catch((error) => {console.log(error);toast.error(error)});
+                .catch((error) => {
+                    console.log(error);
+                    toast.error(error);
+                });
         }
         if (mode == VIEWVER) {
             formRepository
@@ -266,23 +274,32 @@ function Form({
         }
     };
 
+    const onResizeDimention = (e: React.DragEvent<HTMLElement>, item: IField) => {
+        const field = fields.find(field_ => field_._id == item._id);
+        if (field) {
+            field.width = e.currentTarget.clientWidth;
+            field.heigth = e.currentTarget.clientHeight;
+            setFields(fields.map(field_ =>  field_._id == item._id ? field : field_));
+        }
+    }
+
     const onSelect = (e) => {
         const name = e.target.name;
         const key = e.target.value;
         const options = e.target.options;
         const tenant = user['user_metadata']['tenant'];
-        if(name == 'startProcess'){
+        if (name == 'startProcess') {
             setData({
                 ...data,
                 startProcess: e.target.value,
                 callbackProcess: `process-definition/key/${e.target.value}/tenant-id/${tenant}/start`,
             });
         }
-        if(name == 'availableUsers'){
-            console.log(options)
+        if (name == 'availableUsers') {
+            console.log(options);
             setData({
                 ...data,
-                availableUsers: Array.from(e.target.selectedOptions, option => option.value)
+                availableUsers: Array.from(e.target.selectedOptions, (option) => option.value),
             });
         }
     };
@@ -290,13 +307,19 @@ function Form({
     const getOptions = () => {
         if (type == MODELER || type == VIEWVER) {
             return (
-                <div style={{ display: 'inline-flex' }}>
+                <div style={{ display: 'inline-flex', gap: '5px' }}>
                     <button style={{ marginRight: '2px' }} disabled>
                         RETORNAR
                     </button>
                     {type == MODELER ? (
                         <>
-                            <select className="px-5" name="startProcess" id="" value={data.startProcess} onChange={onSelect}>
+                            <select
+                                className="px-5"
+                                name="startProcess"
+                                id=""
+                                value={data.startProcess}
+                                onChange={onSelect}
+                            >
                                 <option key="none" value="">
                                     --- seleccione un proceso ---
                                 </option>
@@ -306,12 +329,20 @@ function Form({
                                     </option>
                                 ))}
                             </select>
-                            <select className="px-5" name="availableUsers" id="" value={data.availableUsers} onChange={onSelect} multiple>
-                                <option key="none" value="">
-                                    --- seleccione un usuario ---
-                                </option>
+                            <select
+                                className="px-5"
+                                name="availableUsers"
+                                id=""
+                                value={data.availableUsers}
+                                onChange={onSelect}
+                                multiple
+                            >
                                 {users.map((item) => (
-                                    <option key={item.user_id} value={item.user_id} selected={data.availableUsers.find((item_) => item_==item)}>
+                                    <option
+                                        key={item.user_id}
+                                        value={item.user_id}
+                                        selected={data.availableUsers.find((item_) => item_ == item)}
+                                    >
                                         {item.nickname}
                                     </option>
                                 ))}
@@ -333,9 +364,19 @@ function Form({
     if (!actions) return <></>;
 
     return (
-        <div className={classes} style={{ position: 'relative', width: width, height: heigth }}>
+        <form className={classes} style={{ position: 'relative', width: width, height: heigth }}>
             <div className="meta-form d-flex justify-content-between py-10" style={{ alignItems: 'center' }}>
-                <div className="h7">{data.name}</div>
+                <div className="h7">
+                    {type != MODELER ? (
+                        data.name
+                    ) : (
+                        <input
+                            name="name"
+                            value={data.name}
+                            onChange={(e) => setData({ ...data, name: e.target.value })}
+                        />
+                    )}
+                </div>
                 {getOptions()}
             </div>
             <div
@@ -368,6 +409,7 @@ function Form({
                                 onResize={onResize}
                                 onDelete={onDelete}
                                 onChange={onChangeField}
+                                onResizeDimention={onResizeDimention}
                                 isDrag={width_ >= 750}
                             />
                         );
@@ -389,7 +431,7 @@ function Form({
                     }
                 })}
             </div>
-        </div>
+        </form>
     );
 }
 

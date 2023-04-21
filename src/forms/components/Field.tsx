@@ -1,10 +1,25 @@
 import React from 'react';
+import { Type } from 'react-toastify/dist/utils';
 
+import { IField, TypeField } from '../domain/Form';
 import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
 import './Field.css';
 import OptionField from './OptionField';
 
-function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize, onDelete, onChange, isDrag }) {
+function Field({
+    type,
+    item,
+    actions,
+    onStart,
+    onEnter,
+    onDrop,
+    onExit,
+    onResize,
+    onDelete,
+    onChange,
+    onResizeDimention,
+    isDrag,
+}) {
     const onDragStart = (e, item) => {
         if (type == MODELER) onStart(e, item);
         else if (type == PANEL_MENU) {
@@ -49,19 +64,26 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
         if (type == MODELER) onDelete(e, item, config);
     };
 
-    const onChangeForm = (e, field) => {
-        field.value = e.target.value;
-        onChange(field);
+    const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>, field: IField) => {
+        console.log('cambandoi');
+        if (field.type == TypeField.checkbox) {
+            console.log('si check');
+            field.value = e.target.checked;
+            onChange(field);
+        } else {
+            field.value = e.target.value;
+            onChange(field);
+        }
     };
 
-    const getTypeField = (field) => {
-        if (field.type == 'comment') {
+    const getTypeField = (field: IField) => {
+        if (field.type == TypeField.comment) {
             return (
                 <div className="field-input">
                     <span className="field-name-collapse comment">{field.name}</span>
                 </div>
             );
-        } else if (field.type == 'select') {
+        } else if (field.type == TypeField.select) {
             return (
                 <div className="field-input">
                     <span className="field-name-collapse">{field.name}</span>
@@ -71,13 +93,67 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
                         id=""
                         value={field.value}
                         onChange={(e) => onChangeForm(e, field)}
+                    >
+                        {field.options.map((item) => (
+                            <option key={item.key} value={item.key}>
+                                {item.value}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            );
+        } else if (field.type == TypeField.area) {
+            return (
+                <div className="field-input">
+                    <span className="field-name-collapse">
+                        {field.name}
+                        {field.isRequired ? <span className="required">*</span> : ''}
+                    </span>
+                    <textarea
+                        style={{
+                            width: '100%',
+                            height: field.heigth,
+                            resize: type == MODELER ? 'vertical' : 'none',
+                            overflow: 'auto',
+                        }}
+                        name={field._id}
+                        id=""
+                        value={field.value}
+                        onChange={(e) => onChangeForm(e, field)}
+                        required={field.isRequired ? true : false}
+                        onMouseUp={(e) => {
+                            if (type == MODELER) onResizeDimention(e, field);
+                        }}
+                        readOnly={!field.isEditable}
+                    ></textarea>
+                </div>
+            );
+        } else if (field.type == TypeField.checkbox) {
+            return (
+                <div className="field-input">
+                    <span className="field-name-collapse">
+                        {field.name}
+                        {field.isRequired ? <span className="required">*</span> : ''}
+                    </span>
+                    <input
+                        style={{ width: '100%' }}
+                        type={field.type}
+                        name={field._id}
+                        id=""
+                        checked={field.value ? true : false}
+                        onChange={(e) => onChangeForm(e, field)}
+                        required={field.isRequired ? true : false}
+                        disabled={!field.isEditable}
                     />
                 </div>
             );
         } else {
             return (
                 <div className="field-input">
-                    <span className="field-name-collapse">{field.name}</span>
+                    <span className="field-name-collapse">
+                        {field.name}
+                        {field.isRequired ? <span className="required">*</span> : ''}
+                    </span>
                     <input
                         style={{ width: '100%' }}
                         type={field.type}
@@ -85,6 +161,8 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
                         id=""
                         value={field.value}
                         onChange={(e) => onChangeForm(e, field)}
+                        required={field.isRequired ? true : false}
+                        disabled={!field.isEditable}
                     />
                 </div>
             );
@@ -97,11 +175,12 @@ function Field({ type, item, actions, onStart, onEnter, onDrop, onExit, onResize
             style={{
                 gridColumn: `${item.gridLocation.column} / ${item.gridLocation.width}`,
                 gridRow: `${item.gridLocation.row} / ${item.gridLocation.height}`,
+                height: 'auto',
                 width: 'initial',
             }}
             className={`grid-area ${type == VIEWVER ? 'form-grid-view' : ''}`}
         >
-            <div key={item._id} className="no-point draggable">
+            <div key={item._id} className="no-point draggable" style={{width: '100%'}}>
                 {type == MODELER || type == PANEL_MENU ? (
                     <div
                         className="dragge"

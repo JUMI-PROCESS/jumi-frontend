@@ -11,7 +11,7 @@ enum PriorityForm {
     low = 'low',
 }
 
-enum TypeField {
+export enum TypeField {
     text = 'text',
     number = 'number',
     select = 'select',
@@ -19,19 +19,24 @@ enum TypeField {
     time = 'time',
     datetime = 'datetime',
     comment = 'comment',
+    area = 'area',
+    checkbox = 'checkbox'
 }
 
 export interface IField {
     _id?: string;
     name: string;
     key?: string;
-    value?: string | number;
+    value?: string | number | boolean;
     type: TypeField;
     color: string;
     background: string;
-    options: Array<String>;
+    options: Array<Record<string, any>>;
     isRequired: boolean;
     constraint: string;
+    width: number;
+    heigth: number;
+    isEditable: boolean;
     gridLocation: {
         row: number;
         column: number;

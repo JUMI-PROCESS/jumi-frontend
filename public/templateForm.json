@@ -10,9 +10,9 @@
     "priority": "low",
     "tenant": "quimica",
     "availableLavels": [],
-    "availableUsers": ["678"],
+    "availableUsers": [],
     "assignedLabel": "",
-    "assignedUsers": "12345",
+    "assignedUsers": "",
     "callbackTask": "",
     "fields": [
         {
