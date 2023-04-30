@@ -23,7 +23,7 @@ export default function ListProcesses({ data, query, setQuery, page, setPage, si
             <SearchInput query={query} setQuery={setQuery} />
             <div className="list-forms">
                 {data.map((item, idx) => (
-                    <ItemProcess key={idx} _id={item.id || item._id} name={item.name} date={item.dateRecorded} type={type} />
+                    <ItemProcess key={idx} _id={item.id || item._id} name={item.name} date={item.dateRecorded || item.deploymentTime || item.startTime} type={type} />
                 ))}
             </div>
             <Paginator limit={limit} size={size} page={page} setPage={setPage} />

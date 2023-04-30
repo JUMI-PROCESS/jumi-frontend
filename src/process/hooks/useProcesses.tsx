@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { IProcess } from '../domain/Process';
+import { ProcessRepositoryApi } from '../output.adapters/ProcessRepositoryApi';
 
 // import { SocketContext } from '../../contexts/FormSocketContext';
 // import { FormSocket } from '../ports/FormSocket';
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function UseForms({ query, page, paramsExtra, type }: Props) {
-    const instanceRepository: EntityRepository = useContext(RepositoryContext)['process'];
+    const instanceRepository: EntityRepository = new ProcessRepositoryApi();
     // const formSocket: FormSocket = useContext(SocketContext)['form'];
 
     const [data, setData] = useState<IProcess[]>([]);

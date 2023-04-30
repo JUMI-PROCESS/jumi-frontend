@@ -31,8 +31,8 @@ import {
 } from '../../../lib/bpmn-panel/dist/index.esm';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
-import { Deployment, IDefinition, IDeployment, IProcess, Process } from '../domain/Process';
-import { MODELER, PANEL_MENU, SAVE, UPDATE, VIEWVER } from '../utilities/TypeProcess';
+import { IDefinition, IDeployment, IProcess, Process } from '../domain/Process';
+import { SAVE, UPDATE } from '../utilities/TypeProcess';
 import './Modeler.css';
 // @ts-ignore
 import templates from '/public/template.json';
@@ -66,21 +66,23 @@ export default function Modeler({ process }: Props) {
                     else if (queryPath.includes('desplegados')) res = await deploymentRepository.getById(_id);
                     else res = await definitionRepository.getById(_id);
                     setData(res.data);
-                    modeler.importXML(res.data.binary ? atob(res.data.binary) : res.data.xml);
+                    await modeler.importXML(res.data.binary ? atob(res.data.binary) : res.data.xml);
                     setModeler(modeler);
                 };
                 fetchData();
             } else {
                 setMode(SAVE);
                 const fetchData = async () => {
-                    const res = await axios.get('/public/diagram.bpmn', {
+                    const res = await axios.get('/diagram.bpmn', {
                         'Content-Type': 'text; charset=utf-8',
                     } as any);
                     setData(new Process({ source: res.data }));
-                    modeler.importXML(res.data);
-                    setModeler(modeler);
+                    await modeler.importXML(res.data);
                 };
+
                 fetchData();
+
+                // setModeler(modeler);
             }
         }
     }, [_id, modeler]);
@@ -89,7 +91,7 @@ export default function Modeler({ process }: Props) {
         const fetchData = async () => {
             setContainer(document.getElementById('canvas'));
             if (container && !modeler) {
-                let modeler = new BpmnModeler({
+                const modeler_ = new BpmnModeler({
                     container,
                     additionalModules: [
                         BpmnPropertiesPanelModule,
@@ -111,10 +113,7 @@ export default function Modeler({ process }: Props) {
                     },
                     elementTemplates: templates,
                 });
-                const data_ = await axios.get('/public/diagram.bpmn', { 'Content-Type': 'text; charset=utf-8' } as any);
-                setData(new Process({ source: data_.data }));
-                modeler.importXML(data_.data);
-                setModeler(modeler);
+                setModeler(modeler_);
             }
         };
         fetchData();
@@ -144,7 +143,7 @@ export default function Modeler({ process }: Props) {
 
     const onCreate = () => {
         if (modeler) {
-            axios.get('/public/diagram.bpmn', { 'Content-Type': 'text; charset=utf-8' } as any).then((data) => {
+            axios.get('/diagram.bpmn', { 'Content-Type': 'text; charset=utf-8' } as any).then((data) => {
                 setData(new Process({ binary: data }));
                 modeler.importXML(data.data);
                 setModeler(modeler);
@@ -157,9 +156,12 @@ export default function Modeler({ process }: Props) {
             const rootElement = modeler.get('canvas').getRootElement();
             const { name } = rootElement['businessObject'];
             if (mode == SAVE || mode == UPDATE) {
-                modeler
-                    .saveXML()
-                    .then((xml: any) => deploymentRepository.save(new Process({ name, binary: xml.xml })));
+                modeler.saveXML().then((xml: any) =>
+                    deploymentRepository
+                        .save(new Process({ name, binary: xml.xml }))
+                        .then(() => toast.success('Proceso desplegado'))
+                        .catch((err) => toast.error(err)),
+                );
             }
         }
     };
@@ -189,7 +191,7 @@ export default function Modeler({ process }: Props) {
                     DESCARGAR
                 </button>
             </div>
-            <div id="modeler">
+            <div className="modeler-bpmn">
                 <div id="canvas"></div>
                 <div>
                     <div id="properties-swap">

@@ -1,0 +1,13 @@
+.count-not {
+    position: absolute;
+    right: 10px;
+    font-size: small;
+    background-color: var(--color-s5-shadow);
+    border-radius: 50px;
+    font-style: normal;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -85,25 +85,27 @@ export class Definition implements  IDefinition {
 }
 
 export interface IInstance {
-    link: string[];
     id: string;
-    definitionId: string;
-    businessKey: string;
+    processDefinitionId: string;
+    processDefinitionKey: string;
     caseInstanceId: string;
-    ended: boolean;
-    suspended: boolean;
+    state: string;
     tenantId: string;
+    startTime: string;
+    endTime: string;
+    durationInMillis: number;
 }
 
 export class Instance implements IInstance {
-    link: string[] = [];
     id: string = '';
-    definitionId: string = '';
-    businessKey: string = '';
+    processDefinitionId: string = '';
+    processDefinitionKey: string = '';
     caseInstanceId: string = '';
-    ended: boolean = false;
-    suspended: boolean = false;
+    state: string = '';
     tenantId: string = '';
+    startTime: string = '';
+    endTime: string = '';
+    durationInMillis: number = 0;
 
     constructor(objData: object) {
         deserialize(objData, this);

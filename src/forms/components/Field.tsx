@@ -1,10 +1,27 @@
-import React from 'react';
-import { Type } from 'react-toastify/dist/utils';
+import React, { ReactElement, useEffect, useState } from 'react';
 
+import { AxiosApiRest } from '../../output.adapters/AxiosApiRest';
 import { IField, TypeField } from '../domain/Form';
 import { MODELER, PANEL_MENU, VIEWVER } from '../utilities/TypeForm';
 import './Field.css';
 import OptionField from './OptionField';
+import Validated from './Validated';
+
+type Props = {
+    type: String;
+    item: IField;
+    actions: string | string[] | Record<string, boolean>;
+    onStart: Function;
+    onEnter: Function;
+    onDrop: Function;
+    onExit: Function;
+    onResize: Function;
+    onDelete: Function;
+    onChange: Function;
+    onResizeDimention: Function;
+    isDrag: boolean;
+    showValid: boolean;
+};
 
 function Field({
     type,
@@ -19,7 +36,10 @@ function Field({
     onChange,
     onResizeDimention,
     isDrag,
-}) {
+    showValid
+}: Props) {
+    const [fieldRender, setFieldRender] = useState<ReactElement<any, any> | null>(null);
+
     const onDragStart = (e, item) => {
         if (type == MODELER) onStart(e, item);
         else if (type == PANEL_MENU) {
@@ -65,10 +85,11 @@ function Field({
     };
 
     const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>, field: IField) => {
-        console.log('cambandoi');
         if (field.type == TypeField.checkbox) {
-            console.log('si check');
             field.value = e.target.checked;
+            onChange(field);
+        } else if (e.target.type.includes('restApi')) {
+            field.value = e.target.value;
             onChange(field);
         } else {
             field.value = e.target.value;
@@ -76,98 +97,144 @@ function Field({
         }
     };
 
-    const getTypeField = (field: IField) => {
-        if (field.type == TypeField.comment) {
-            return (
-                <div className="field-input">
-                    <span className="field-name-collapse comment">{field.name}</span>
-                </div>
-            );
-        } else if (field.type == TypeField.select) {
-            return (
-                <div className="field-input">
-                    <span className="field-name-collapse">{field.name}</span>
-                    <select
-                        style={{ width: '100%' }}
-                        name={field._id}
-                        id=""
-                        value={field.value}
-                        onChange={(e) => onChangeForm(e, field)}
-                    >
-                        {field.options.map((item) => (
-                            <option key={item.key} value={item.key}>
-                                {item.value}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            );
-        } else if (field.type == TypeField.area) {
-            return (
-                <div className="field-input">
-                    <span className="field-name-collapse">
-                        {field.name}
-                        {field.isRequired ? <span className="required">*</span> : ''}
-                    </span>
-                    <textarea
-                        style={{
-                            width: '100%',
-                            height: field.heigth,
-                            resize: type == MODELER ? 'vertical' : 'none',
-                            overflow: 'auto',
-                        }}
-                        name={field._id}
-                        id=""
-                        value={field.value}
-                        onChange={(e) => onChangeForm(e, field)}
-                        required={field.isRequired ? true : false}
-                        onMouseUp={(e) => {
-                            if (type == MODELER) onResizeDimention(e, field);
-                        }}
-                        readOnly={!field.isEditable}
-                    ></textarea>
-                </div>
-            );
-        } else if (field.type == TypeField.checkbox) {
-            return (
-                <div className="field-input">
-                    <span className="field-name-collapse">
-                        {field.name}
-                        {field.isRequired ? <span className="required">*</span> : ''}
-                    </span>
-                    <input
-                        style={{ width: '100%' }}
-                        type={field.type}
-                        name={field._id}
-                        id=""
-                        checked={field.value ? true : false}
-                        onChange={(e) => onChangeForm(e, field)}
-                        required={field.isRequired ? true : false}
-                        disabled={!field.isEditable}
-                    />
-                </div>
-            );
-        } else {
-            return (
-                <div className="field-input">
-                    <span className="field-name-collapse">
-                        {field.name}
-                        {field.isRequired ? <span className="required">*</span> : ''}
-                    </span>
-                    <input
-                        style={{ width: '100%' }}
-                        type={field.type}
-                        name={field._id}
-                        id=""
-                        value={field.value}
-                        onChange={(e) => onChangeForm(e, field)}
-                        required={field.isRequired ? true : false}
-                        disabled={!field.isEditable}
-                    />
-                </div>
-            );
-        }
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            const fieldRender = async () => {
+                if (item.type == TypeField.comment) {
+                    return (
+                        <div className="field-input">
+                            <span className="field-name-collapse comment">{item.name}</span>
+                        </div>
+                    );
+                } else if (item.type == TypeField.select) {
+                    return (
+                        <div className="field-input">
+                            <span className="field-name-collapse">
+                                {item.name}
+                                {item.isRequired ? <span className="required">*</span> : ''}
+                            </span>
+                            <select
+                                style={{ width: '100%' }}
+                                name={item._id}
+                                id=""
+                                value={item.value}
+                                onChange={(e) => onChangeForm(e, item)}
+                            >
+                                {item.options.map((item_) => (
+                                    <option key={item_.key} value={item_.key}>
+                                        {item_.value}
+                                    </option>
+                                ))}
+                            </select>
+                            <Validated type={type} value={item.value} isRequired={item.isRequired} show={showValid} />
+                        </div>
+                    );
+                } else if (item.type == TypeField.area) {
+                    return (
+                        <div className="field-input">
+                            <span className="field-name-collapse">
+                                {item.name}
+                                {item.isRequired ? <span className="required">*</span> : ''}
+                            </span>
+                            <textarea
+                                style={{
+                                    width: '100%',
+                                    height: item.heigth,
+                                    resize: type == MODELER ? 'vertical' : 'none',
+                                    overflow: 'auto',
+                                }}
+                                name={item._id}
+                                id=""
+                                value={item.value}
+                                onChange={(e) => onChangeForm(e, item)}
+                                required={item.isRequired ? true : false}
+                                onMouseUp={(e) => {
+                                    if (type == MODELER) onResizeDimention(e, item);
+                                }}
+                                readOnly={!item.isEditable}
+                            ></textarea>
+                            <Validated type={type} value={item.value} isRequired={item.isRequired} show={showValid} />
+                        </div>
+                    );
+                } else if (item.type == TypeField.checkbox) {
+                    return (
+                        <div className="field-input">
+                            <span className="field-name-collapse">
+                                {item.name}
+                                {item.isRequired ? <span className="required">*</span> : ''}
+                            </span>
+                            <input
+                                style={{ width: '100%' }}
+                                type={item.type}
+                                name={item._id}
+                                id=""
+                                checked={item.value ? true : false}
+                                onChange={(e) => onChangeForm(e, item)}
+                                required={item.isRequired ? true : false}
+                                disabled={!item.isEditable}
+                            />
+                            <Validated type={type} value={item.value} isRequired={item.isRequired} show={showValid} />
+                        </div>
+                    );
+                } else if (item.type == TypeField.rest_api) {
+                    const auth =
+                        item.restApi.typeAuth == 'JUMI'
+                            ? `Bearer ${localStorage.getItem('access_token')}`
+                            : item.restApi.valueAuth;
+                    const fetch = new AxiosApiRest({ headers: { Authorization: auth } }, item.restApi.httpURI, '');
+                    const data =
+                        type == PANEL_MENU || type == MODELER ? [] : (await fetch.getConecction().get('', {})).data;
+                    return (
+                        <div className="field-input">
+                            <span className="field-name-collapse">
+                                {item.name}
+                                {item.isRequired ? <span className="required">*</span> : ''}
+                            </span>
+                            <select
+                                style={{ width: '100%' }}
+                                name={item._id}
+                                id=""
+                                value={item.value}
+                                onChange={(e) => onChangeForm(e, item)}
+                            >
+                                <option key="" value="">--seleccione--</option>
+                                {data.map((item_) => (
+                                    <option key={item_[item.restApi.key]} value={item_[item.restApi.key]}>
+                                        {item_[item.restApi.value]}
+                                    </option>
+                                ))}
+                            </select>
+                            <Validated type={type} value={item.value} isRequired={item.isRequired} show={showValid} />
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div className="field-input">
+                            <span className="field-name-collapse">
+                                {item.name}
+                                {item.isRequired ? <span className="required">*</span> : ''}
+                            </span>
+                            <input
+                                style={{ width: '100%' }}
+                                type={item.type}
+                                name={item._id}
+                                id=""
+                                value={item.value}
+                                onChange={(e) => onChangeForm(e, item)}
+                                required={item.isRequired ? true : false}
+                                disabled={!item.isEditable}
+                            />
+                            <Validated type={type} value={item.value} isRequired={item.isRequired} show={showValid} />
+                        </div>
+                    );
+                }
+            };
+            setFieldRender(await fieldRender());
+        };
+        fetchData();
+    }, [JSON.stringify(item), showValid]);
+
+    if (!fieldRender) return <span>Loading...</span>;
 
     return (
         <div
@@ -180,7 +247,7 @@ function Field({
             }}
             className={`grid-area ${type == VIEWVER ? 'form-grid-view' : ''}`}
         >
-            <div key={item._id} className="no-point draggable" style={{width: '100%'}}>
+            <div key={item._id} className="no-point draggable" style={{ width: '100%' }}>
                 {type == MODELER || type == PANEL_MENU ? (
                     <div
                         className="dragge"
@@ -200,7 +267,7 @@ function Field({
                 ) : (
                     <></>
                 )}
-                {getTypeField(item)}
+                {fieldRender}
                 {type == MODELER && type != VIEWVER ? (
                     <>
                         <OptionField

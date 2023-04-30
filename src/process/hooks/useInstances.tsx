@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 
-import { RepositoryContext } from '../../contexts/RepositoryContext';
+// import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { IInstance } from '../domain/Process';
+import { InstanceRepositoryApi } from '../output.adapters/InstanceRepositoryApi';
 
 // import { SocketContext } from '../../contexts/FormSocketContext';
 // import { FormSocket } from '../ports/FormSocket';
@@ -15,7 +16,7 @@ type Props = {
 };
 
 export default function UseInstances({ query, page, paramsExtra, type }: Props) {
-    const instanceRepository: EntityRepository<IInstance> = useContext(RepositoryContext)['instance'];
+    const instanceRepository: EntityRepository<IInstance> = new InstanceRepositoryApi();
     // const formSocket: FormSocket = useContext(SocketContext)['form'];
 
     const [data, setData] = useState<Array<IInstance>>([]);
@@ -23,7 +24,7 @@ export default function UseInstances({ query, page, paramsExtra, type }: Props) 
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await instanceRepository.getCounter(query, 'name', paramsExtra, type);
+            const res = await instanceRepository.getCounter(query, 'processDefinitionName', paramsExtra, type);
             setSize(res.data);
         };
 
@@ -32,7 +33,7 @@ export default function UseInstances({ query, page, paramsExtra, type }: Props) 
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await instanceRepository.getBy(query, page, 'name', paramsExtra, type);
+            const res = await instanceRepository.getBy(query, page, 'processDefinitionName', paramsExtra, type);
             setData(res.data);
         };
 

@@ -12,7 +12,7 @@ export default function SearchInput({ query, setQuery }: Props) {
     };
 
     return (
-        <div className='search justify-self-end'>
+        <div className="search justify-self-end">
             <input type="text" name="" value={query} id="" onChange={onChange} />
             <span>&#9740;</span>
         </div>

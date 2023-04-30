@@ -35,6 +35,11 @@ export class DeploymentRepositoryApi
         return await this.URL.api.getConecction().patch(`deployment/?_id=${_id}`, formData);
     }
 
+    async delete(_id: string): Promise<AxiosResponse<Number | IDeployment | IDeployment[], any>> {
+        const { data, status } = await this.URL.api.getConecction().delete(`deployment/?_id=${_id}`);
+        return data;
+    }
+
     async getById(_id: string): Promise<AxiosResponse<IDeployment>> {
         return await this.URL.api.getConecction().get(`deployment/${_id}`);
     }

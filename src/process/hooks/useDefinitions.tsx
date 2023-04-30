@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 
-import { RepositoryContext } from '../../contexts/RepositoryContext';
+// import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { IDefinition } from '../domain/Process';
+import { DefinitionRepositoryApi } from '../output.adapters/DefinitionRepositoryApi';
 
 // import { SocketContext } from '../../contexts/FormSocketContext';
 // import { FormSocket } from '../ports/FormSocket';
@@ -15,7 +16,7 @@ type Props = {
 };
 
 export default function UseDefinitions({ query, page, paramsExtra, type }: Props) {
-    const instanceRepository: EntityRepository<IDefinition> = useContext(RepositoryContext)['definition'];
+    const instanceRepository: EntityRepository<IDefinition> = new DefinitionRepositoryApi();
     // const formSocket: FormSocket = useContext(SocketContext)['form'];
 
     const [data, setData] = useState<Array<IDefinition>>([]);

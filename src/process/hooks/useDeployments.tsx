@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 
-import { RepositoryContext } from '../../contexts/RepositoryContext';
+// import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { IProcess as IDeployment } from '../domain/Process';
+import { DeploymentRepositoryApi } from '../output.adapters/DeploymentRepositoryApi';
 
 // import { SocketContext } from '../../contexts/FormSocketContext';
 // import { FormSocket } from '../ports/FormSocket';
@@ -15,7 +16,7 @@ type Props = {
 };
 
 export default function UseDeployments({ query, page, paramsExtra, type }: Props) {
-    const instanceRepository: EntityRepository<IDeployment> = useContext(RepositoryContext)['deployment'];
+    const instanceRepository: EntityRepository<IDeployment> = new DeploymentRepositoryApi();
     // const formSocket: FormSocket = useContext(SocketContext)['form'];
 
     const [data, setData] = useState<Array<IDeployment>>([]);

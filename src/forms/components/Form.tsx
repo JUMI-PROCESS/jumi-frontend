@@ -8,7 +8,7 @@ import { useDimention } from '../../hooks/useDimention';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { Definition, IDefinition } from '../../process/domain/Process';
 import { IUser, User } from '../../users/domain/user';
-import { FormTemplate, IField, Form as IForm, IFormTemplate, StatusForm } from '../domain/Form';
+import { FormTemplate, IField, Form as IForm, IFormTemplate, StatusForm, Field as Field_ } from '../domain/Form';
 import { MODELER, PANEL_MENU, ParamsType, SAVE, UPDATE, VIEWVER } from '../utilities/TypeForm';
 import { getRandomId } from '../utilities/Utilities';
 import Field from './Field';
@@ -79,6 +79,7 @@ function Form({
 
     const [definitions, setDefinitions] = useState<Array<Definition>>([]);
     const [users, setUsers] = useState<Array<User>>([]);
+    const [showValid, setShowValid] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -93,6 +94,7 @@ function Form({
     }, []);
 
     useEffect(() => {
+        console.log(type);
         if (type == MODELER) {
             setFields(fillSpace(data, fields));
         }
@@ -259,29 +261,37 @@ function Form({
                     navigate('/formularios/todos');
                 })
                 .catch((error) => {
-                    console.log(error);
                     toast.error(error);
                 });
         }
         if (mode == VIEWVER) {
-            formRepository
-                .complete(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }))
-                .then((data) => {
-                    toast.success('Formulario diligenciado');
-                    navigate('/formularios/tareas');
-                })
-                .catch((error) => toast.error(error));
+            const isValid = onValidated();
+            if (isValid) {
+                formRepository
+                    .complete(data._id || '', new IForm({ ...data, status: StatusForm.received, fields: dataSave }))
+                    .then((data) => {
+                        toast.success('Formulario diligenciado');
+                        navigate('/formularios/tareas');
+                    })
+                    .catch((error) => toast.error(error));
+            } else {
+                setShowValid(true);
+            }
         }
     };
 
+    const onValidated = () => {
+        return fields.reduce((b, a) => b && new Field_(a).validated(), true);
+    };
+
     const onResizeDimention = (e: React.DragEvent<HTMLElement>, item: IField) => {
-        const field = fields.find(field_ => field_._id == item._id);
+        const field = fields.find((field_) => field_._id == item._id);
         if (field) {
             field.width = e.currentTarget.clientWidth;
             field.heigth = e.currentTarget.clientHeight;
-            setFields(fields.map(field_ =>  field_._id == item._id ? field : field_));
+            setFields(fields.map((field_) => (field_._id == item._id ? field : field_)));
         }
-    }
+    };
 
     const onSelect = (e) => {
         const name = e.target.name;
@@ -361,10 +371,10 @@ function Form({
         }
     };
 
-    if (!actions) return <></>;
+    if (!actions && type) return <></>;
 
     return (
-        <form className={classes} style={{ position: 'relative', width: width, height: heigth }}>
+        <form className={classes} style={{ position: 'relative', width: width, height: heigth }} noValidate>
             <div className="meta-form d-flex justify-content-between py-10" style={{ alignItems: 'center' }}>
                 <div className="h7">
                     {type != MODELER ? (
@@ -411,6 +421,7 @@ function Form({
                                 onChange={onChangeField}
                                 onResizeDimention={onResizeDimention}
                                 isDrag={width_ >= 750}
+                                showValid={showValid}
                             />
                         );
                     } else {

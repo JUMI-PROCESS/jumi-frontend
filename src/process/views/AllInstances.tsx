@@ -36,7 +36,7 @@ export default function AllInstances({}: Props) {
     return (
         <ListProcess
             data={data.map((item) => {
-                return { ...item, name: item.definitionId.split(':')[0] };
+                return { ...item, name: item.processDefinitionName };
             })}
             query={query}
             setQuery={setQuery}

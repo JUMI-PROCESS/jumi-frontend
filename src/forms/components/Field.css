@@ -1,5 +1,36 @@
+.validated {
+    position: absolute;
+    bottom: -7px;
+    font-size: x-small;
+}
+
 .required {
-    color: red;
+    color: rgb(161, 14, 14);
+}
+
+.required {
+    animation: vibrar 1s infinite;
+}
+
+@keyframes vibrar {
+    0% {
+        transform: translateX(0);
+    }
+    20% {
+        transform: translateX(-1px);
+    }
+    40% {
+        transform: translateX(1px);
+    }
+    60% {
+        transform: translateX(-0.5px);
+    }
+    80% {
+        transform: translateX(0.5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }
 
 .no-point {

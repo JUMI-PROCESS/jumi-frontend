@@ -20,7 +20,8 @@ export enum TypeField {
     datetime = 'datetime',
     comment = 'comment',
     area = 'area',
-    checkbox = 'checkbox'
+    checkbox = 'checkbox',
+    rest_api = 'rest_api',
 }
 
 export interface IField {
@@ -37,12 +38,59 @@ export interface IField {
     width: number;
     heigth: number;
     isEditable: boolean;
-    gridLocation: {
+    restApi?: {
+        httpURI: string;
+        typeAuth: string;
+        valueAuth: string;
+        key: string;
+        value: string;
+    };
+    gridLocation?: {
         row: number;
         column: number;
         height: number;
         width: number;
     };
+
+    validated(): boolean;
+}
+
+export class Field implements IField {
+    _id?: string = '';
+    name: string = '';
+    key?: string;
+    value?: string | number | boolean;
+    type: TypeField = TypeField.text;
+    color: string = '';
+    background: string = '';
+    options: Array<Record<string, any>> = [];
+    isRequired: boolean = false;
+    constraint: string = '';
+    width: number = 0;
+    heigth: number = 0;
+    isEditable: boolean = false;
+    restApi?: {
+        httpURI: string;
+        typeAuth: string;
+        valueAuth: string;
+        key: string;
+        value: string;
+    } | undefined;
+    gridLocation?: {
+        row: number;
+        column: number;
+        height: number;
+        width: number;
+    } | undefined;
+
+    validated(): boolean {
+        console.log('validando', (this.isRequired ? Boolean(this.value) : true) || this.type == TypeField.comment, this.value, this.name)
+        return (this.isRequired ? Boolean(this.value) : true) || this.type == TypeField.comment;
+    }
+
+    constructor(objData: object) {
+        deserialize(objData, this);
+    }
 }
 
 export interface IForm {

@@ -10,21 +10,24 @@ export class UserRepositoryApi implements EntityRepository<IUser> {
     setConfig(config: Record<string, any>): void {}
 
     async save(form: IUser): Promise<boolean> {
-        return await this.URL.api.getConecction().post(`form/`, { form: form });
+        return await this.URL.api.getConecction().post(`user/`, { form: form });
     }
 
     async update(_id: string, form: IUser): Promise<IUser | null> {
-        const { data, status } = await this.URL.api.getConecction().patch(`form/?_id=${_id}`, { form: form });
+        const { data, status } = await this.URL.api.getConecction().patch(`user/?_id=${_id}`, { form: form });
         return data;
+    }
+
+    async delete(_id: string): Promise<any> {
+        throw new Error('Method not implemented.');
     }
 
     async complete(_id: string, form: IUser): Promise<IUser | null> {
-        const { data, status } = await this.URL.api.getConecction().patch(`form/complete/?_id=${_id}`, { form: form });
-        return data;
+        throw new Error('Method not implemented.');
     }
 
     async getById(_id: string): Promise<IUser | null> {
-        return this.URL.api.getConecction().get(`form/${_id}`);
+        return this.URL.api.getConecction().get(`user/${_id}`);
     }
 
     async getBy(
@@ -47,6 +50,6 @@ export class UserRepositoryApi implements EntityRepository<IUser> {
         const paramsExtra_ = paramsExtra.reduce((b, a) => b + `${a},`, '');
         return this.URL.api
             .getConecction()
-            .get(`form/count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`);
+            .get(`user/count/all?&query=${query}&params=${params}&paramsExtra=${paramsExtra_}&type=${type}`);
     }
 }

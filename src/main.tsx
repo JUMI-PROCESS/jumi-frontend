@@ -6,7 +6,6 @@ import App from './App';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
         <Auth0Provider
             domain="dev-rk8v8gk7wiwt6rgi.us.auth0.com"
             clientId="Gql0qF18UhhOxw9DvvRYKpeVzmG0B3tj"
@@ -18,6 +17,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             }}
         >
             <App />
-        </Auth0Provider>
-    </React.StrictMode>,
+        </Auth0Provider>,
 );

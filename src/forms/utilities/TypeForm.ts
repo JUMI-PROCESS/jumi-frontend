@@ -16,7 +16,7 @@ export const ParamsType: Record<string, Record<string, string | Array<string> | 
     '/formularios/tareas': {
         type: 'instanced',
         params: ['assignedLabel', 'assignedUser'],
-        actions: { isDelete: false, isEdit: false, isInfo: true, isFill: true, isAssigned: false },
+        actions: { isDelete: true, isEdit: false, isInfo: true, isFill: true, isAssigned: false },
     },
     '/formularios/todos': {
         type: '',

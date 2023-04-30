@@ -1,10 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { Form, IForm } from '../domain/Form';
-import { SocketContext } from '../../contexts/FormSocketContext';
-import { FormSocket } from '../ports/FormSocket';
 import { EntityRepository } from '../../output.ports/EntityRepository';
+import { FormTemplateRepositoryApi } from '../output.adapaters/FormTemplateRepositoryApi';
 
 type Props = {
     query: string;
@@ -14,9 +12,10 @@ type Props = {
     limit: number
 };
 
-export default function UseTenantFormsTemplates({ query, page, paramsExtra, type, limit }: Props) {
-    const formRepository: EntityRepository<IForm> = useContext(RepositoryContext)['formTemplate'];
-    const formSocket: FormSocket = useContext(SocketContext)['form'];
+export default function useTenantFormsTemplates({ query, page, paramsExtra, type, limit }: Props) {
+    const formRepository: EntityRepository<IForm> = new FormTemplateRepositoryApi();
+
+    formRepository.setConfig({})
 
     const [data, setData] = useState<Array<IForm>>([]);
     const [size, setSize] = useState(0);

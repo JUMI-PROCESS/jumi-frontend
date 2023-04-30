@@ -5,7 +5,7 @@ import { IFormTemplate } from '../domain/Form';
 export class FormTemplateRepositoryApi implements EntityRepository<IFormTemplate> {
     limit: number = 8;
 
-    private URL = JumiBackApiRest.getInstance();
+    constructor(private URL = JumiBackApiRest.getInstance()) {}
 
     setConfig(config: Record<string, any>): void {}
 
@@ -15,6 +15,11 @@ export class FormTemplateRepositoryApi implements EntityRepository<IFormTemplate
 
     async update(_id: string, form: IFormTemplate): Promise<IFormTemplate | null> {
         const { data, status } = await this.URL.api.getConecction().patch(`form-template/?_id=${_id}`, { form: form });
+        return data;
+    }
+
+    async delete(_id: string): Promise<boolean> {
+        const { data, status } = await this.URL.api.getConecction().delete(`form-template/?_id=${_id}`);
         return data;
     }
 

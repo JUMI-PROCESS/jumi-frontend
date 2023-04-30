@@ -18,6 +18,11 @@ export class FormRepositoryApi implements EntityRepository<IForm> {
         return data;
     }
 
+    async delete(_id: string): Promise<boolean> {
+        const { data, status } = await this.URL.api.getConecction().delete(`form/?_id=${_id}`);
+        return data;
+    }
+
     async complete(_id: string, form: IForm): Promise<IForm | null> {
         const { data, status } = await this.URL.api.getConecction().patch(`form/complete/?_id=${_id}`, { form: form });
         return data;

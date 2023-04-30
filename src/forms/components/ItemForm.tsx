@@ -24,6 +24,7 @@ export default function ItemForm({ _id, name, date }: Props) {
 
     const { pathname } = useLocation();
     const actions = ParamsType[pathname]['actions'] as Record<string, boolean>;
+    const type = pathname.startsWith('/formularios/tareas') ? 'tareas' : 'todos';
 
     const onNavigate = () => {
         if (actions['isFill']) navigate(`/formularios/tareas/${_id}`);
@@ -45,13 +46,19 @@ export default function ItemForm({ _id, name, date }: Props) {
     };
 
     return (
-        <div className="target py-20" onClick={onNavigate}>
-            <div className="target-info">
+        <div className="target py-20">
+            <div className="target-info" onClick={onNavigate}>
                 <span className="h3">{name}</span>
                 <span className="h4-sub">{moment(date).format('ddd DD MMM YYYY HH:mm:ss')}</span>
             </div>
             <div className="target-options">
-                {actions['isDelete'] ? <div className="icon">&#9746;</div> : <></>}
+                {actions['isDelete'] ? (
+                    <Link to={`/formularios/eliminar/${_id}?name=${name}&type=${type}`} className="icon">
+                        &#9746;
+                    </Link>
+                ) : (
+                    <></>
+                )}
                 {actions['isEdit'] ? (
                     <Link to={`/formularios/modelador/${_id}`} className="icon">
                         &#9998;

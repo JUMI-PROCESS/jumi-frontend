@@ -32,7 +32,13 @@ export default function ItemProcess({ _id, name, date, type }: Props) {
                 <span className="h4-sub">{moment(date).format('ddd DD MMM YYYY HH:mm:ss')}</span>
             </div>
             <div className="target-options">
-                {actions['isDelete'] ? <div className="icon">&#9746;</div> : <></>}
+                {actions['isDelete'] ? (
+                    <Link to={`/procesos/eliminar/${_id}?name=${name}&type=${type}`} className="icon">
+                        &#9746;
+                    </Link>
+                ) : (
+                    <></>
+                )}
                 {actions['isEdit'] ? (
                     <Link to={`/procesos/modelador/${_id}/?type=${type}`} className="icon">
                         &#9998;

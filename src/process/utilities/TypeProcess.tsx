@@ -16,17 +16,17 @@ export const ParamsType: Record<string, Record<string, string | Array<string> | 
     '/procesos/desplegados': {
         type: '',
         params: [],
-        actions: { isDelete: false, isEdit: true, isInfo: true, isFill: false },
+        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false },
     },
     '/procesos/definiciones': {
         type: '',
         params: [],
-        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false },
+        actions: { isDelete: false, isEdit: true, isInfo: true, isFill: false },
     },
     '/procesos/instanciados': {
         type: '',
         params: [],
-        actions: { isDelete: true, isEdit: true, isInfo: true, isFill: false },
+        actions: { isDelete: true, isEdit: false, isInfo: true, isFill: false },
     },
     '/procesos/modelador': {
         type: '',

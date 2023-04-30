@@ -21,6 +21,7 @@ function OptionUser({ buttonOpen }: props) {
 
     const onLogout = () => {
         localStorage.removeItem('access_token');
+        localStorage.removeItem('tenant');
         logout({ logoutParams: { returnTo: import.meta.env.VITE_APP_JUMI } });
     };
 

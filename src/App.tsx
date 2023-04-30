@@ -8,17 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
-import { SocketContext, SocketContextDefault } from './contexts/FormSocketContext';
-import {
-    DefinitionRepositoryApiContextDefault as definition,
-    DeploymentRepositoryContextDefault as deployment,
-    FormRepositoryContextDefault as form,
-    FormTemplateRepositoryContextDefault as formTemplate,
-    InstanceRepositoryApiContextDefault as instance,
-    ProcessRepositoryContextDefault as process,
-    UserRepositoryApiContextDefault as user_,
-    RepositoryContext,
-} from './contexts/RepositoryContext';
+import { SocketContext, socketFormContextDefault, socketNotificationContextDefault } from './contexts/SocketContext';
 import { UserContext } from './contexts/UserContext';
 import Routing from './routing/Router';
 
@@ -38,14 +28,8 @@ function App() {
                     headers: { Authorization: `Bearer ${token}` },
                 },
             );
-            // const users_ = await axios.get(
-            //     `https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/users/`,
-            //     {
-            //         headers: { Authorization: `Bearer ${token}` },
-            //     },
-            // );
-            // console.log(users_);
             localStorage.setItem('access_token', token);
+            localStorage.setItem('tenant', user_.data.user_metadata.tenant);
             setUser({ ...user_.data, token: token });
         };
 
@@ -68,23 +52,23 @@ function App() {
     return (
         <BrowserRouter>
             <UserContext.Provider value={user}>
-                <RepositoryContext.Provider value={{ form, formTemplate, process, deployment, instance, definition, user: user_ }}>
-                    <SocketContext.Provider value={{ form: SocketContextDefault }}>
-                        <ToastContainer
-                            position="top-right"
-                            autoClose={5000}
-                            hideProgressBar={false}
-                            newestOnTop={false}
-                            closeOnClick
-                            rtl={false}
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                            theme="dark"
-                        />
-                        <Routing></Routing>
-                    </SocketContext.Provider>
-                </RepositoryContext.Provider>
+                <SocketContext.Provider
+                    value={{ form: socketFormContextDefault, notification: socketNotificationContextDefault }}
+                >
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="dark"
+                    />
+                    <Routing></Routing>
+                </SocketContext.Provider>
             </UserContext.Provider>
         </BrowserRouter>
     );

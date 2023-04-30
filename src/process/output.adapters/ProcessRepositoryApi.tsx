@@ -33,6 +33,11 @@ export class ProcessRepositoryApi implements EntityRepository<IProcess> {
         return await this.URL.api.getConecction().patch(`process/?_id=${_id}`, formData);
     }
 
+    async delete(_id: string): Promise<any> {
+        const { data, status } = await this.URL.api.getConecction().delete(`process/?_id=${_id}`);
+        return data;
+    }
+
     async getById(_id: string): Promise<Process | null> {
         return this.URL.api.getConecction().get(`process/${_id}`);
     }

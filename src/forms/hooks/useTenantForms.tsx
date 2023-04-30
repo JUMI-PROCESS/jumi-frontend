@@ -1,10 +1,12 @@
 import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/UserContext';
 import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { Form, IForm } from '../domain/Form';
-import { SocketContext } from '../../contexts/FormSocketContext';
+import { SocketContext } from '../../contexts/SocketContext';
 import { FormSocket } from '../ports/FormSocket';
 import { EntityRepository } from '../../output.ports/EntityRepository';
+import { FormRepositoryApi } from '../output.adapaters/FormRepositoryApi';
+import { SocketNotification } from '../../output.adapters/SocketNotificacion';
+import { ISocket } from '../../output.ports/ISocket';
 
 type Props = {
     query: string;
@@ -14,9 +16,9 @@ type Props = {
     limit?: number;
 };
 
-export default function UseTenantForms({ query, page, paramsExtra, type, limit }: Props) {
-    const formRepository: EntityRepository<IForm> = useContext(RepositoryContext)['form'];
-    const formSocket: FormSocket = useContext(SocketContext)['form'];
+export default function useTenantForms({ query, page, paramsExtra, type, limit }: Props) {
+    const formRepository: EntityRepository<IForm> = new FormRepositoryApi();
+    const formSocket: ISocket = useContext(SocketContext)['form'];
 
     const [data, setData] = useState<Array<IForm>>([]);
     const [size, setSize] = useState(0);
@@ -40,19 +42,17 @@ export default function UseTenantForms({ query, page, paramsExtra, type, limit }
     }, [query, page, JSON.stringify(paramsExtra)]);
 
     useEffect(() => {
-        const fetchData = async (data_: IForm) => {
+        const fetchData = async () => {
             const res = await formRepository.getBy(query, page, 'name', paramsExtra, type, limit);
             setData(res.data);
             setSize((size) => size + 1);
-
-            new Notification('JUMI', { body: 'Se agrego un nuevo formulario' });
         };
-        formSocket.onForm(fetchData);
+        formSocket.onMessage(fetchData, 'form');
 
         return () => {
-            formSocket.URL.off('signal', fetchData);
+            formSocket.URL.off('form', () => console.log('Disconnect socket'));
         };
-    }, [query, page, JSON.stringify(paramsExtra), type]);
+    }, []);
 
     return { data, size };
 }
