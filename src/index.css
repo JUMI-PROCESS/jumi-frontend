@@ -313,3 +313,10 @@ select[multiple] {
     background: var(--color-p2-shadow);
 }
 /* COMPONENTS */
+
+/* EVENTS COMPONENTS */
+.pointer:hover {
+    cursor: pointer;     
+}
+/* EVENTS COMPONENTS */
+

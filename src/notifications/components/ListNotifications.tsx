@@ -23,7 +23,7 @@ export default function ListNotifications({ data, query, setQuery, page, setPage
             <SearchInput query={query} setQuery={setQuery} />
             <div className="d-flex-columns py-10" style={{gap: '10px'}}>
                 {data.map((item, idx) => (
-                    <ItemNotification key={idx} _id={item._id} name={item.title} date={item.dateRecorded} />
+                    <ItemNotification key={idx} _id={item._id} name={item.title} date={item.dateRecorded} message={item.message}/>
                 ))}
             </div>
             <Paginator limit={limit} size={size} page={page} setPage={setPage} />

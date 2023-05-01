@@ -4,6 +4,7 @@ import { RepositoryContext } from '../../contexts/RepositoryContext';
 import { EntityRepository } from '../../output.ports/EntityRepository';
 import { INotification } from '../domain/Notification';
 import { NotificationRepositoryApi } from '../output.adapters/NotificationRepositoryApi';
+import {useCounter} from '../../store.global';
 
 type Props = {
     query: string;
@@ -15,6 +16,7 @@ type Props = {
 
 export default function useTenantNotifications({ query, page, paramsExtra, type, limit }: Props) {
     const userRepository: EntityRepository<INotification> = new NotificationRepositoryApi();
+    const count = useCounter((state) => state.counterNotification);
 
     const [data, setData] = useState<Array<INotification>>([]);
     const [size, setSize] = useState(0);
@@ -27,7 +29,7 @@ export default function useTenantNotifications({ query, page, paramsExtra, type,
         };
 
         fetchData();
-    }, [query, page, JSON.stringify(paramsExtra)]);
+    }, [query, page, JSON.stringify(paramsExtra), count]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,7 +38,7 @@ export default function useTenantNotifications({ query, page, paramsExtra, type,
         };
 
         fetchData();
-    }, [query, page, JSON.stringify(paramsExtra)]);
+    }, [query, page, JSON.stringify(paramsExtra), count]);
 
     return { data, size };
 }

@@ -6,22 +6,33 @@ import ListNotifications from '../components/ListNotifications';
 import OptionUser from '../components/OptionUser';
 import { SocketContext } from '../contexts/SocketContext';
 import { UserContext } from '../contexts/UserContext';
+import { NotificationRepositoryApi } from '../notifications/output.adapters/NotificationRepositoryApi';
 import { ISocket } from '../output.ports/ISocket';
-
-import './MainLayout.css'
+import { useCounter } from '../store.global';
+import './MainLayout.css';
 
 function MainLayout({}) {
     const location = useLocation().pathname;
     const userContext: Record<string, any> = useContext(UserContext);
     const socketNotification: ISocket = useContext(SocketContext)['notification'];
+    const count = useCounter((state) => state.counterNotification);
+    const setCounter = useCounter((state) => state.setCounter);
 
     useEffect(() => {
+        const fetchData = async () => {
+            const data = await new NotificationRepositoryApi().getCounter('', 'title', ['owner'], '');
+            setCounter(data.data);
+            const regex = /\[(\d+)\]/g;
+            document.title = document.title.replace(regex, `[${data.data}]`);
+        };
         socketNotification.onMessage((value: Record<string, any>) => {
             if (value.user == userContext.user_id) {
                 toast.info(value['message']);
                 new Notification('JUMI', { body: value['message'], icon: '/public/img/unicauca.png' });
+                fetchData();
             }
         });
+        fetchData();
 
         return () => {
             socketNotification.URL.off('signal', () => console.log('Disconnect socket'));
@@ -29,8 +40,8 @@ function MainLayout({}) {
     }, []);
 
     useEffect(() => {
-        if (location.startsWith('/procesos')) document.title = 'JUMI | Procesos';
-        if (location.startsWith('/formularios')) document.title = 'JUMI | Formularios';
+        if (location.startsWith('/procesos')) document.title = `JUMI | Procesos [${count}]`;
+        if (location.startsWith('/formularios')) document.title = `JUMI | Formularios [${count}]`;
     }, [location]);
 
     return (
@@ -56,8 +67,8 @@ function MainLayout({}) {
                     </div>
                     <ListNotifications
                         buttonOpen={
-                            <div style={{position: 'relative'}}>
-                                <i className="count-not">0</i>
+                            <div style={{ position: 'relative' }}>
+                                <i className="count-not">{count <= 9 ? count : '9+'}</i>
                                 <div className="nav-user">&#9993;</div>
                             </div>
                         }
