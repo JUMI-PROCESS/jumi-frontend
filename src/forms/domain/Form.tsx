@@ -22,6 +22,7 @@ export enum TypeField {
     area = 'area',
     checkbox = 'checkbox',
     rest_api = 'rest_api',
+    file = 'file',
 }
 
 export interface IField {
