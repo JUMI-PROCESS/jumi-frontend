@@ -28,6 +28,7 @@ export enum TypeField {
 export interface IField {
     _id?: string;
     name: string;
+    alias: string;
     key?: string;
     value?: string | number | boolean;
     type: TypeField;
@@ -59,6 +60,7 @@ export interface IField {
 export class Field implements IField {
     _id?: string = '';
     name: string = '';
+    alias: string = '';
     key?: string;
     value?: string | number | boolean;
     type: TypeField = TypeField.text;

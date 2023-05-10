@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
@@ -6,6 +6,7 @@ import { TypeField } from '../domain/Form';
 import './OptionField.css';
 
 function OptionField({ buttonOpen, props, setProps }) {
+    const [option, setOption] = useState('');
     const onProps = (e) => {
         if (e.target.name == 'value') {
             if (e.target.type == 'checkbox') props.value = e.target.checked;
@@ -171,6 +172,62 @@ function OptionField({ buttonOpen, props, setProps }) {
                                     value={props.restApi.valueAuth}
                                     onChange={onProps}
                                 />
+                            </div>
+                        </>
+                    ) : props.type == TypeField.select ? (
+                        <>
+                            <b className="h7" style={{ margin: '0' }}>
+                                Opciones
+                            </b>
+                            <hr />
+                            <div style={{ padding: '0' }} className="field-input">
+                                <span>Opción</span>
+                                <div className="d-flex">
+                                    <input
+                                        style={{ width: '90%' }}
+                                        type="text"
+                                        name="option"
+                                        id=""
+                                        value={option}
+                                        onChange={(e) => {
+                                            setOption(e.target.value);
+                                        }}
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            if (option.split(',').length == 3) {
+                                                let optionsAux = props.options;
+                                                optionsAux.push({
+                                                    key: option.split(',')[0],
+                                                    value: option.split(',')[1],
+                                                    alias: option.split(',')[2],
+                                                });
+                                                setProps({ ...props, options: optionsAux });
+                                                setOption('');
+                                            }
+                                        }}
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                            <div style={{ padding: '0' }} className="field-input">
+                                <ul>
+                                    {props.options.map((item) => (
+                                        <div className="d-flex" style={{ justifyContent: 'space-between' }}>
+                                            <li key={item.key}>{item.value}</li>
+                                            <span
+                                                onClick={() => {
+                                                    let optionsAux = props.options;
+                                                    optionsAux = optionsAux.filter((item_) => item_.key != item.key);
+                                                    setProps({ ...props, options: optionsAux });
+                                                }}
+                                            >
+                                                x
+                                            </span>
+                                        </div>
+                                    ))}
+                                </ul>
                             </div>
                         </>
                     ) : (
