@@ -27,8 +27,24 @@ function MainLayout({}) {
         };
         socketNotification.onMessage((value: Record<string, any>) => {
             if (value.user == userContext.user_id) {
-                toast.info(value['message']);
-                new Notification('JUMI', { body: value['message'], icon: '/public/img/unicauca.png' });
+                toast.info(value['title']);
+                if (import.meta.env.MODE === 'development') {
+                    new Notification(value['title'], {
+                        body: value['message'],
+                        icon: '/img/128x128.png',
+                    });
+                } else {
+                    Notification.requestPermission(function (result) {
+                        if (result === 'granted') {
+                            navigator.serviceWorker.ready.then(function (registration) {
+                                registration.showNotification(value['title'], {
+                                    body: value['message'],
+                                    icon: '/img/128x128.png',
+                                });
+                            });
+                        }
+                    });
+                }
                 fetchData();
             }
         });
@@ -50,7 +66,7 @@ function MainLayout({}) {
                 <ul className="d-flex">
                     <Link to={'/inicio'}>
                         <div className="d-flex logo">
-                            <img src="/img/unicauca.png" alt="logo-unicauca" height={40} />
+                            <img src="/jumi.svg" alt="logo-unicauca" height={40} />
                             <div className="d-grid" style={{ margin: '0 10px', textAlign: 'center' }}>
                                 <div className="h7">Departamento de Química</div>
                                 <div className="sh7">Universidad del Cauca</div>

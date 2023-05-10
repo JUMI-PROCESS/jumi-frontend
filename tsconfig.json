@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "public/template.json"],
+  "include": ["src", "public/template.json", "organic-acronym-384819-firebase-adminsdk-p5xwa-b595f2c383.ts"],
   "exclude": ["src/**/*.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -40,6 +40,19 @@ function Field({
 }: Props) {
     const [fieldRender, setFieldRender] = useState<ReactElement<any, any> | null>(null);
 
+    const readFile = (inputFile) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const archivoBase64 = reader.result.split(',')[1];
+            resolve(archivoBase64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(inputFile);
+        });
+      }
+      
+
     const onDragStart = (e, item) => {
         if (type == MODELER) onStart(e, item);
         else if (type == PANEL_MENU) {
@@ -84,14 +97,19 @@ function Field({
         if (type == MODELER) onDelete(e, item, config);
     };
 
-    const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>, field: IField) => {
+    const onChangeForm = async(e: React.ChangeEvent<HTMLInputElement>, field: IField) => {
         if (field.type == TypeField.checkbox) {
             field.value = e.target.checked;
             onChange(field);
         } else if (e.target.type.includes('restApi')) {
             field.value = e.target.value;
             onChange(field);
-        } else {
+        } else if(field.type == TypeField.file) {
+            field.value = await readFile(e.target.files[0]);
+            console.log(field.value);
+            onChange(field);
+        }
+        else {
             field.value = e.target.value;
             onChange(field);
         }
@@ -207,7 +225,31 @@ function Field({
                             <Validated type={type} value={item.value} isRequired={item.isRequired} show={showValid} />
                         </div>
                     );
-                } else {
+                }else if (item.type == TypeField.file){
+                    return (
+                        <div className="field-input">
+                            <span className="field-name-collapse">
+                                {item.name}
+                                {item.isRequired ? <span className="required">*</span> : ''}
+                            </span>
+                            <input
+                                style={{ width: '100%' }}
+                                type={item.type}
+                                name={item._id}
+                                id=""
+                                onChange={(e) => onChangeForm(e, item)}
+                                onClick={(event) => {
+                                    event.target.value = null;
+                                }}
+                                required={item.isRequired ? true : false}
+                                disabled={!item.isEditable}
+                            />
+                            <Validated type={type} value={item.value} isRequired={item.isRequired} show={showValid} />
+                        </div>
+                    );            
+                }
+                
+                else {
                     return (
                         <div className="field-input">
                             <span className="field-name-collapse">

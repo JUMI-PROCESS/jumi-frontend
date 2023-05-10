@@ -91,6 +91,41 @@ export default function Modeler({ process }: Props) {
         const fetchData = async () => {
             setContainer(document.getElementById('canvas'));
             if (container && !modeler) {
+                var customPropertiesProvider = {
+                    getTabs: function (element) {
+                        // Verificar si el elemento es un evento de error
+                        if (element && element.businessObject.$instanceOf('bpmn:ErrorEventDefinition')) {
+                            // Devolver la pestaña "Input/Output" personalizada
+                            return [
+                                {
+                                    id: 'custom-input-output',
+                                    label: 'Input/Output',
+                                    groups: [
+                                        {
+                                            id: 'input-output-group',
+                                            label: '',
+                                            entries: [
+                                                {
+                                                    id: 'retry-time-cycle',
+                                                    html:
+                                                        '<div class="pp-row pp-spacing label"><label for="camunda-retry-time-cycle">Retry Time Cycle</label></div>' +
+                                                        '<div class="pp-row pp-spacing">' +
+                                                        '<input id="camunda-retry-time-cycle" type="text" name="retryTimeCycle" />' +
+                                                        '</div>',
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ];
+                        }
+                        // Devolver la vista de propiedades predeterminada para todos los demás elementos
+                        return customPropertiesProvider.getTabs(element);
+                    },
+                };
+                var customModules = {
+                    propertiesProvider: [ 'type', customPropertiesProvider ]
+                  };
                 const modeler_ = new BpmnModeler({
                     container,
                     additionalModules: [
@@ -101,6 +136,7 @@ export default function Modeler({ process }: Props) {
                         minimapModule,
                         TokenSimulationModule,
                         ElementTemplateChooserModule,
+                        customModules
                     ],
                     propertiesPanel: {
                         parent: document.getElementById('properties-panel'),

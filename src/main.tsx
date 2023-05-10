@@ -6,16 +6,29 @@ import App from './App';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-        <Auth0Provider
-            domain="dev-rk8v8gk7wiwt6rgi.us.auth0.com"
-            clientId="Gql0qF18UhhOxw9DvvRYKpeVzmG0B3tj"
-            cacheLocation={'localstorage' as const}
-            authorizationParams={{
-                redirect_uri: import.meta.env.VITE_REDIRECT_JUMI,
-                audience: 'https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/',
-                scope: 'profile read:current_user',
-            }}
-        >
-            <App />
-        </Auth0Provider>,
+    <Auth0Provider
+        domain="dev-rk8v8gk7wiwt6rgi.us.auth0.com"
+        clientId="Gql0qF18UhhOxw9DvvRYKpeVzmG0B3tj"
+        cacheLocation={'localstorage' as const}
+        authorizationParams={{
+            redirect_uri: import.meta.env.VITE_REDIRECT_JUMI,
+            audience: 'https://dev-rk8v8gk7wiwt6rgi.us.auth0.com/api/v2/',
+            scope: 'profile read:current_user',
+        }}
+    >
+        <App />
+    </Auth0Provider>,
 );
+
+window.addEventListener('load', () => {
+    navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then(function (registration) {
+            console.log(registration.scope);
+            return registration.scope;
+        })
+        .catch(function (err) {
+            console.log(err);
+            return err;
+        });
+});

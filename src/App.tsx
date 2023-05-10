@@ -28,6 +28,7 @@ function App() {
                     headers: { Authorization: `Bearer ${token}` },
                 },
             );
+            localStorage.setItem('user', user_.data.user_id);
             localStorage.setItem('access_token', token);
             localStorage.setItem('tenant', user_.data.user_metadata.tenant);
             setUser({ ...user_.data, token: token });
